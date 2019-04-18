@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 
+const Product = require('./models/product');
 
 const sequelize = require('./util/database');
 
@@ -31,8 +32,8 @@ app.use(ordersRoutes);
 sequelize
 .sync()
 .then( result => {
-    //console.log(result);
-    app.listen(8080);
+    console.log(result);
+    app.listen(8000);
 })
 .catch(err => {
     console.log(err);
