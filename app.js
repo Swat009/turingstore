@@ -1,9 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+
+
+const sequelize = require('./util/database');
 
 const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
-const expressValidator = require('express-validator');
+
+
+
 
 const app = express();
 
@@ -22,5 +28,12 @@ app.use((req, res, next) => {
 app.use(productsRoutes);
 app.use(ordersRoutes);
 
-
-app.listen(8080);
+sequelize
+.sync()
+.then( result => {
+    //console.log(result);
+    app.listen(8080);
+})
+.catch(err => {
+    console.log(err);
+});
