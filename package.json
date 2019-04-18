@@ -1,0 +1,21 @@
+{
+  "name": "turingshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "swatantra kumar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11"
+  }
+}
