@@ -8,7 +8,7 @@ exports.validate = (method) => {
 
         case 'order': {
             return [
-                body('cart_id').trim(),
+                
                 //body('customer_id').exists(),
                 //body('shipping_id').exists(), 
                 //body('tax_id').exists()
@@ -31,14 +31,18 @@ exports.createOrder = (req, res, next) => {
         })
     }
 
-    const card_id = req.body.cart_id;
+    const cart_id = req.body.cart_id;
     const customer_id = req.body.customer_id;
     const shipping_id = req.body.shipping_id;
     const tax_id = req.body.tax_id;
 
+    console.log("card id "+card_id);
+
     res.status(201).json({
 
-        orderid: "1234"    
+        orderid: "12345",
+        cart_id: cart_id,
+        test: "hello"   
 
     });
 };
