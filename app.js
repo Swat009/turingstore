@@ -14,7 +14,7 @@ const sequelize = require('./util/database');
 const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
 const customersRoutes = require('./routes/customers');
-
+const stripeRoutes = require('./routes/stripe');
 
 
 
@@ -53,6 +53,7 @@ app.use((req, res, next) => {
 app.use(productsRoutes);
 app.use(ordersRoutes);
 app.use(customersRoutes);
+app.use(stripeRoutes);
 sequelize
 .sync()
 .then( result => {
