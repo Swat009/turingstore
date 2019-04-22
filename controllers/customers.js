@@ -100,3 +100,9 @@ exports.loginCustomer = (req, res, next) => {
 
 };
 
+exports.loginFbCustomer = (req, res, next) => {
+
+    const access_token = req.body.access_token;
+    
+
+};

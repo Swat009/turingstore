@@ -27,6 +27,7 @@ router.put('/customer',[
 ],
 customersController.updateCustomer);
 router.post('/customer/login',customersController.loginCustomer);
+router.post('/customers/facebook',customersController.loginFbCustomer);
 
 
 

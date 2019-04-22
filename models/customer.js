@@ -86,6 +86,12 @@ const Customer = sequelize.define('customer',{
         type: Sequelize.STRING,
        
     },
+    facebookProviderId: {
+        type: Sequelize.STRING,
+    },
+    facebookProviderToken: {
+        type: Sequelize.STRING,
+    }
    
 
 
