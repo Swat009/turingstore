@@ -4,6 +4,8 @@ const sequelize = require('../util/database');
 
 const Department = sequelize.define('department',{
 
+   
+
     department_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -21,10 +23,10 @@ const Department = sequelize.define('department',{
         type: Sequelize.STRING,
         allowNull: false,
 
-    }
+    },
+    
 
 
+},{timestamps: false});
 
-});
-
-module.exports = Product;
+module.exports = Department;

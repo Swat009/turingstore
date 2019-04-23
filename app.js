@@ -9,6 +9,7 @@ var FacebookTokenStrategy = require('passport-facebook-token');
 const Customers = require('./models/customer'); 
 const Product = require('./models/product');
 const Review = require('./models/review');
+const Departments = require('./models/department');
 
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
@@ -19,6 +20,7 @@ const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
 const customersRoutes = require('./routes/customers');
 const stripeRoutes = require('./routes/stripe');
+const departmentsRoutes = require('./routes/departments');
 
 
 
@@ -123,8 +125,9 @@ app.use(productsRoutes);
 app.use(ordersRoutes);
 app.use(customersRoutes);
 app.use(stripeRoutes);
+app.use(departmentsRoutes);
 sequelize
-.sync({force:true})
+.sync()
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
