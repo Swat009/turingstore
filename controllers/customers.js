@@ -102,21 +102,12 @@ exports.loginCustomer = (req, res, next) => {
 
 exports.loginFbCustomer = (req, res, next) => {
 
-    const access_token = req.body.access_token;
+    
+        console.log('user details');
+        console.log(req.user);
 
-    passport.authenticate('facebook-token', {session: false}), function(req, res, next) {
-        
-        if (!req.user) {
-          return res.send(401, 'User Not Authenticated');
-        }
-    
-        // prepare token for API
-        req.auth = {
-          id: req.user.id
-        };
-    
-        next();
-      };
+        return res.status(200).json({});
+      
 
 
 };

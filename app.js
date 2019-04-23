@@ -57,6 +57,14 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
+
 passport.use(new FacebookTokenStrategy({
     clientID: '330598714267221',
     clientSecret: 'bbae63fa55ef259fea67d8431ef69c9c'
@@ -64,7 +72,7 @@ passport.use(new FacebookTokenStrategy({
   function (accessToken, refreshToken, profile, done) {
     //Using next tick to take advantage of async properties
     process.nextTick(function () {
-      Customer.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
+      Customers.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
             if(err) {
                 return done(err);
             } 
@@ -73,7 +81,7 @@ passport.use(new FacebookTokenStrategy({
             } else {
                 //Create the user
                 
-                const customer = new Customer({
+                const customer = new Customers({
 
                   name: profile.displayName,
                   email: profile.emails[0].value,
@@ -81,14 +89,29 @@ passport.use(new FacebookTokenStrategy({
   
                 });
 
-                //Find the user (therefore checking if it was indeed created) and return it
-                Customer.findOne( { where : { facebookProviderId : profile.id  } }).then(function (user, err) {
+                customer.save().then(result =>{
+
+                    //Find the user (therefore checking if it was indeed created) and return it
+                    Customers.findOne( { where : { facebookProviderId : profile.id  } }).then(function (user, err) {
                     if(user) {
                         return done(null, user);
                     } else {
                         return done(err);
                     }
+                })
+                .catch(err => {
+
+                    return done(err);
+                
                 });
+
+
+
+            });
+
+
+
+                
             }
         });
     });
@@ -101,7 +124,7 @@ app.use(ordersRoutes);
 app.use(customersRoutes);
 app.use(stripeRoutes);
 sequelize
-.sync()
+.sync({force:true})
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
