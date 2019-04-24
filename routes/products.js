@@ -4,8 +4,10 @@ const productsController = require("../controllers/products");
 
 const router = express.Router();
 router.get('/products/:productId/reviews',productsController.getReview);
-router.post('/products/:productId/reviews', isAuth, productsController.addReview);
+router.post('/products/:productId/reviews', productsController.addReview);
 router.get('/products/:productId/locations',productsController.getProductLocations);
+router.get('/products/:productId/details',productsController.getProduct);
+router.get('/products/:productId',productsController.getProduct);
 router.get('/products',productsController.getProducts);
 
 

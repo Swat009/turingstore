@@ -30,6 +30,6 @@ const Review = sequelize.define('review',{
 
 
 
-});
+},{timestamps: false});
 
 module.exports = Review;

@@ -1,13 +1,46 @@
 const Product = require('../models/product');
+const Review = require('../models/review');
 
 exports.getProducts = (req, res, next) => {
-    res.status(200).json({
-        products: [{product_id:"Charas", name: "charas",
-         description: "yo",price: "200rs", discounted_price: "200rs",thumbnail: ""}]
 
+    Product.findAll({raw: true})
+    .then( products =>{
+
+
+        res.status(200).json(products);
+
+
+    })
+    .catch(err => {
+
+        console.log(err);
 
     });
+        
 };
+
+exports.getProduct = (req, res, next) => {
+
+    const product_id = req.params.productId;
+    console.log('Productkey');
+    console.log(product_id);
+
+    Product.findByPk(product_id)
+    .then( product =>{
+
+
+        res.status(200).json(product);
+
+
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
+        
+};
+
 
 
 
@@ -15,14 +48,31 @@ exports.getReview = (req, res, next) => {
 
     const prodId = req.params.productId;
 
+    Product.findOne({
+        where: {product_id: prodId},
+        attributes: [],
+        include: [
+            {
+                model: Review, as: Review.tableName,
+               
+            }
+        ]
+    })
+    .then( product=>{
+
+        //console.log(reviews);
+
+        return res.status(200).json(product.reviews);
 
 
+    })
+    .catch(err => {
 
-    res.status(200).json({
-        review: "Yes you are in review.!",
-        prodId: prodId
+        console.log(err);
+        return res.status(500).json(err);
 
     });
+        
 };
 
 

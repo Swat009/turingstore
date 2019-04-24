@@ -127,7 +127,7 @@ app.use(customersRoutes);
 app.use(stripeRoutes);
 app.use(departmentsRoutes);
 sequelize
-.sync()
+.sync({force:'true'})
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
@@ -145,7 +145,7 @@ sequelize
 .then(product =>{
     console.log("Youp")
     console.log(product);
-    app.listen(8000);
+    app.listen(4000);
 })
 .catch(err => {
     console.log(err);
