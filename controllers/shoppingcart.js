@@ -65,7 +65,84 @@ exports.getcartId = (req, res, next) => {
 
 exports.update = (req, res, next) => {
 
+    const item_id = req.params.item_id;
+    const quantity = req.body.quantity;
+
+    CartWithProduct.findOne({where:{item_id: item_id}})
+    .then(product => {
+
+        if(!product){
+            return res.status(500).json({});
+        }
+
+        product.quantity = quantity;
+        product.subtotal = ""+(product.quantity * parseInt(product.price));
+        product.save()
+        .then(product =>{
+
+            cart_id = product.cart_id;
+            CartWithProduct.findAll({where:{cart_id: cart_id}, raw: true})
+            .then(products => {
+                
+                return res.status(200).json(products);
+
+
+            })
+           
+
+        })
+
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
 
 
 }
 
+exports.empty = (req, res, next) => {
+    const cart_id = req.params.cart_id;
+    CartWithProduct.destro({cart_id: cart_id})
+    .then( () =>{  return res.status(200).json({})}) 
+    .catch(err => {
+
+        console.log(err);
+
+    });
+
+}
+
+exports.removeProduct = (req, res, next) => {
+
+    const item_id = req.params.item_id;
+    CartWithProduct.destro({item_id: item_id})
+    .then( () =>{  return res.status(200).json({})}) 
+    .catch(err => {
+
+        console.log(err);
+
+    });
+
+
+
+
+}
+exports.totalAmount = (req,res,next) =>{
+
+    const cart_id = req.params.cart_id;
+
+}
+
+exports.moveToCart = (req, res,next) =>{
+
+    const item_id = req.params.item_id;
+
+}
+
+exports.saveForLater = (req,res,next) =>{
+
+    const item_id = req.params.item_id;
+
+}
