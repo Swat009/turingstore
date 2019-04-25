@@ -1,6 +1,7 @@
 const Product = require('../models/product');
 const Review = require('../models/review');
 const Department = require('../models/department');
+const Category = require('../models/category'); 
 
 exports.getProducts = (req, res, next) => {
 
@@ -121,13 +122,18 @@ exports.addReview = (req, res, next) => {
 
 exports.getProductLocations = (req, res, next) => {
 
-    const prodId = req.params.productId;
+    const product_id = req.params.product_id;
 
     Product.findByPk(product_id) 
     .then(product =>{
 
-        department_id = product.departmentDepartmentId;
-
+        
+        product.getCategories({
+           
+        })
+        .then(categories =>{
+            return res.status(200).json(categories);
+        })
         
 
     })
@@ -138,12 +144,19 @@ exports.getProductLocations = (req, res, next) => {
 exports.getProductsInDepartment = (req, res, next) => {
 
 
-    const department_id = parseInt(req.params.department_id);
+    const department_id = req.params.department_id;
 
-    Product.findAll({where:{departmentDepartmentId:department_id}})
+    Product.findAll({
+       
+        include: [
+            { model: Category,
+              where:{departmentDepartmentId:department_id},
+            }
+        ]
+    })
     .then(products =>{
 
-            res.status(200).json(products)
+           return res.status(200).json(products)
 
     })
     .catch(err => console.log(err));
@@ -153,12 +166,16 @@ exports.getProductsInDepartment = (req, res, next) => {
 exports.getProductsInCategory = (req, res, next) => {
 
 
-    const department_id = parseInt(req.params.department_id);
+    const category_id = req.params.category_id;
 
-    Product.findAll({where:{departmentDepartmentId:department_id}})
-    .then(products =>{
+    Category.findByPk(category_id) 
+    .then(category =>{
 
-            res.status(200).json(products)
+        category.getProducts()
+        .then(products =>{
+            return res.status(200).json(products);
+         })
+       
 
     })
     .catch(err => console.log(err));
