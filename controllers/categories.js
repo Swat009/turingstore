@@ -1,4 +1,6 @@
 const Category = require('../models/category'); 
+const Product = require('../models/product');
+const Department = require('../models/department');
 
 
 exports.categories = (req, res, next) => {
@@ -42,4 +44,42 @@ exports.category = (req, res, next) => {
 
 
 
+}
+
+exports.getProductCategories = (req, res, next) => {
+
+    const product_id = req.params.product_id;
+    Product.findByPk(product_id) 
+    .then( product =>{
+
+        product.getCategories()
+        .then(categories =>{
+           return res.status(200).json(categories);
+        })
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
+    
+}
+
+exports.getDepartmentCategories = (req, res, next) => {
+
+    const department_id = req.params.department_id;
+    Department.findByPk(department_id) 
+    .then( department =>{
+
+        department.getCategories()
+        .then(categories =>{
+           return res.status(200).json(categories);
+        })
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
+    
 }

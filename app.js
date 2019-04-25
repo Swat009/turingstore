@@ -23,12 +23,13 @@ Categories.belongsToMany(Product,{through: ProductCategories});
 
 
 const sequelize = require('./util/database');
-
+const categoriesRoutes = require('./routes/categories');
 const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
 const customersRoutes = require('./routes/customers');
 const stripeRoutes = require('./routes/stripe');
 const departmentsRoutes = require('./routes/departments');
+
 
 
 
@@ -135,8 +136,9 @@ app.use(ordersRoutes);
 app.use(customersRoutes);
 app.use(stripeRoutes);
 app.use(departmentsRoutes);
+app.use(categoriesRoutes);
 sequelize
-.sync({force:'true'})
+.sync()
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
