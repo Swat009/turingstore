@@ -149,3 +149,18 @@ exports.getProductsInDepartment = (req, res, next) => {
     .catch(err => console.log(err));
 
 };
+
+exports.getProductsInCategory = (req, res, next) => {
+
+
+    const department_id = parseInt(req.params.department_id);
+
+    Product.findAll({where:{departmentDepartmentId:department_id}})
+    .then(products =>{
+
+            res.status(200).json(products)
+
+    })
+    .catch(err => console.log(err));
+
+};
