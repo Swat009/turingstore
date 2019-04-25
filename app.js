@@ -10,9 +10,20 @@ const Customers = require('./models/customer');
 const Product = require('./models/product');
 const Review = require('./models/review');
 const Departments = require('./models/department');
+const Categories = require('./models/category');
 
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
+Product.belongsTo(Departments);
+Departments.hasMany(Product);
+Product.belongsTo(Categories);
+Categories.hasMany(Product);
+Categories.belongsTo(Departments);
+Categories.hasMany(Departments);
+Product.belongsToMany(Categories,{throught: ProductCategories});
+Categories.belongsToMany(Product,{throught: ProductCategories});
+
+
 
 const sequelize = require('./util/database');
 
@@ -21,6 +32,7 @@ const ordersRoutes = require('./routes/orders');
 const customersRoutes = require('./routes/customers');
 const stripeRoutes = require('./routes/stripe');
 const departmentsRoutes = require('./routes/departments');
+
 
 
 
@@ -145,7 +157,7 @@ sequelize
 .then(product =>{
     console.log("Youp")
     console.log(product);
-    app.listen(4000);
+    app.listen(8000);
 })
 .catch(err => {
     console.log(err);

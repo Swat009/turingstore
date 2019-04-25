@@ -104,7 +104,7 @@ exports.update = (req, res, next) => {
 
 exports.empty = (req, res, next) => {
     const cart_id = req.params.cart_id;
-    CartWithProduct.destro({cart_id: cart_id})
+    CartWithProduct.destroy({cart_id: cart_id})
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
@@ -117,7 +117,7 @@ exports.empty = (req, res, next) => {
 exports.removeProduct = (req, res, next) => {
 
     const item_id = req.params.item_id;
-    CartWithProduct.destro({item_id: item_id})
+    CartWithProduct.destroy({item_id: item_id})
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 

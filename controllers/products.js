@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Review = require('../models/review');
+const Department = require('../models/department');
 
 exports.getProducts = (req, res, next) => {
 
@@ -122,10 +123,29 @@ exports.getProductLocations = (req, res, next) => {
 
     const prodId = req.params.productId;
 
+    Product.findByPk(product_id) 
+    .then(product =>{
 
-    res.status(200).json({
-        review: "Yes you are in locations.!",
-        prodId: prodId
+        department_id = product.departmentDepartmentId;
 
-    });
+        
+
+    })
+    .catch(err => console.log(err));
+  
+};
+
+exports.getProductsInDepartment = (req, res, next) => {
+
+
+    const department_id = parseInt(req.params.department_id);
+
+    Product.findAll({where:{departmentDepartmentId:department_id}})
+    .then(products =>{
+
+            res.status(200).json(products)
+
+    })
+    .catch(err => console.log(err));
+
 };

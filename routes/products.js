@@ -3,6 +3,7 @@ const isAuth = require('../middleware/is-auth');
 const productsController = require("../controllers/products");
 
 const router = express.Router();
+router.get('/products/inDepartment/:department_id',productsController.getProductsInDepartment);
 router.get('/products/:productId/reviews',productsController.getReview);
 router.post('/products/:productId/reviews', productsController.addReview);
 router.get('/products/:productId/locations',productsController.getProductLocations);
