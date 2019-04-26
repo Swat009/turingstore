@@ -12,13 +12,20 @@ const Review = require('./models/review');
 const Departments = require('./models/department');
 const Categories = require('./models/category');
 const ProductCategories = require('./models/productcategories');
-
+const Attribute = require('./models/attribute');
+const AttributeValue = require('./models/attributevalue');
+const ProductAttribute = require('./models/productattribute');
+ 
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
 Categories.belongsTo(Departments);
 Departments.hasMany(Categories);
 Product.belongsToMany(Categories,{through: ProductCategories});
 Categories.belongsToMany(Product,{through: ProductCategories});
+Attribute.hasMany(AttributeValue);
+AttributeValue.belongsTo(Attribute);
+Product.belongsToMany(AttributeValue,{through: ProductAttribute});
+AttributeValue.belongsToMany(Product,{through: ProductAttribute});
 
 
 
@@ -29,6 +36,7 @@ const ordersRoutes = require('./routes/orders');
 const customersRoutes = require('./routes/customers');
 const stripeRoutes = require('./routes/stripe');
 const departmentsRoutes = require('./routes/departments');
+const attributeRoutes = require('./routes/attributes');
 
 
 
@@ -137,6 +145,7 @@ app.use(customersRoutes);
 app.use(stripeRoutes);
 app.use(departmentsRoutes);
 app.use(categoriesRoutes);
+app.use(attributeRoutes);
 sequelize
 .sync()
 .then( result => {

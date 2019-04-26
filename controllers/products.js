@@ -44,8 +44,6 @@ exports.getProduct = (req, res, next) => {
 };
 
 
-
-
 exports.getReview = (req, res, next) => {
 
     const prodId = req.params.productId;

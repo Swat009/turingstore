@@ -27,9 +27,5 @@ exports.charge = (req, res, next) => {
             });
         }
     });
-    
-    
-    
-    
 
 };

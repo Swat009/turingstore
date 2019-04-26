@@ -126,8 +126,6 @@ exports.removeProduct = (req, res, next) => {
     });
 
 
-
-
 }
 exports.totalAmount = (req,res,next) =>{
 

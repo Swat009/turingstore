@@ -19,6 +19,6 @@ const Attribute = sequelize.define('attribute',{
    
 
 
-});
+},{timestamps: false});
 
 module.exports = Attribute;

@@ -19,6 +19,6 @@ const AttributeValue = sequelize.define('attributevalue',{
    
 
 
-});
+},{timestamps: false});
 
 module.exports = AttributeValue;
