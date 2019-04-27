@@ -1,40 +1,30 @@
+var DataTypes = require('sequelize/lib/data-types');
 const Sequelize = require('sequelize'); 
 
 const sequelize = require('../util/database');
 
-const Product = sequelize.define('product',{
+const Shipping = sequelize.define('shipping',{
 
-    product_id: {
+    shipping_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    shipping_type: {
 
         type: Sequelize.STRING,
         allowNull: false,
 
     },
-    price: {
+    shipping_cost: {
 
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
 
-    },
-    discounted_price: {
-
-        type: Sequelize.STRING,
-        allowNull: false,
-
-    },
-    thumbnail: {
-        type: Sequelize.STRING,
-        allowNull: false,
     }
-
 
 
 },{timestamps: false});
 
-module.exports = Product;
+module.exports = Shipping;

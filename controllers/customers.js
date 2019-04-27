@@ -82,7 +82,7 @@ exports.loginCustomer = (req, res, next) => {
                 'somesupersecretsecret',
                 {expiresIn: '1h'}
             );
-            res.status(200).json({token:token, userId: loadedCustomer.customer_id })
+            return res.status(200).json({token:token, userId: loadedCustomer.customer_id })
             
 
 
@@ -100,3 +100,25 @@ exports.loginCustomer = (req, res, next) => {
 
 };
 
+exports.loginFbCustomer = (req, res, next) => {
+
+    
+        console.log('user details');
+        console.log(req.user);
+        loadedCustomer = req.user
+        const token = jwt.sign({
+
+            email: loadedCustomer.email,
+            userId: loadedCustomer.customer_id
+
+        },
+        'somesupersecretsecret',
+        {expiresIn: '1h'}
+        );
+        return res.status(200).json({token:token, userId: loadedCustomer.customer_id })
+
+        
+      
+
+
+};

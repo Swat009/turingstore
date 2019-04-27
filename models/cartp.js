@@ -4,18 +4,18 @@ const sequelize = require('../util/database');
 
 const Cart = sequelize.define('cart',{
 
-
-    cart_id: {
-        type: Sequelize.STRING,
+    item_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
+    name: {
 
-    item_id: {
         type: Sequelize.STRING,
         allowNull: false,
+
     },
-    
     attributes : {
 
         type: Sequelize.STRING,
@@ -38,15 +38,10 @@ const Cart = sequelize.define('cart',{
         type: Sequelize.STRING,
         allowNull: false,
 
-    },
-    product_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      
-    },
+    }
 
 
 
-},{timestamps: false});
+});
 
 module.exports = Cart;

@@ -2,31 +2,23 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
-const Department = sequelize.define('department',{
+const AttributeValue = sequelize.define('attributevalue',{
 
-   
-
-    department_id: {
+    attribute_value_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    value: {
 
         type: Sequelize.STRING,
         allowNull: false,
 
-    },
-    description : {
-
-        type: Sequelize.STRING,
-        allowNull: false,
-
-    },
-    
+    }
+   
 
 
 },{timestamps: false});
 
-module.exports = Department;
+module.exports = AttributeValue;

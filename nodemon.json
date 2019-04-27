@@ -1,0 +1,8 @@
+{
+    "env":{
+        "USERNAME": "root",
+        "PASSWORD": "Testing@123",
+        "DATABASE": "store",
+        "HOST":"localhost"
+    }
+}

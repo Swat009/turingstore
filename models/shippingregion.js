@@ -2,31 +2,22 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
-const Department = sequelize.define('department',{
+const ShippingRegion = sequelize.define('shippingregion',{
 
-   
-
-    department_id: {
+    shipping_region_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    shipping_region: {
 
         type: Sequelize.STRING,
         allowNull: false,
 
-    },
-    description : {
-
-        type: Sequelize.STRING,
-        allowNull: false,
-
-    },
+    }
     
-
 
 },{timestamps: false});
 
-module.exports = Department;
+module.exports = ShippingRegion;
