@@ -1,7 +1,6 @@
 var uniqid = require('uniqid');
 const Cart = require('../models/cart'); 
-const CartWithProduct = require('../models/cartwithproduct'); 
-
+const Product = require('../models/product');
 
 
 exports.generateUniqueId = (req, res, next) => {
@@ -13,26 +12,46 @@ exports.generateUniqueId = (req, res, next) => {
 
 exports.add = (req, res, next) => {
     
-    const cart_id = req.params.cart_id;
-    const product_id = req.params.product_id;
-    const attributes = req.params.attributes;
+    const cart_id = req.body.cart_id;
+    const product_id = req.body.product_id;
+    const attributes = req.body.attributes;
+    const item_id = cart_id+product_id;
 
-    const cartwithproduct = new CartWithProduct({
+    Product.findByPk(product_id)
+    .then(product =>{
+        console.log("Product");
+        console.log(product);
+        const cart = new Cart({
 
-        cart_id: cart_id,
-        product_id: product_id,
-        attributes: attributes
+            cart_id: cart_id,
+            product_id: product_id,
+            attributes: attributes,
+            item_id: item_id,
+            quantity: 1,
+            price: product.price,
+            subtotal: product.price
+    
+        });
+    
+        cart.save().then(cart =>{
+    
+            res.status(200).json(cart);
+             
+        })
+        .catch(err => {
 
-      });
+            console.log(err);
+            return res.status(500).json({error:err});
+        
+        });
+  
 
-    cartwithproduct.save().then(cartwithproduct =>{
 
-        res.status(200).json(JSON.stringify(cartwithproduct));
-         
     })
     .catch(err => {
 
-          return done(err);
+        console.log(err);
+        return res.status(500).json({error:err});
       
     });
 
@@ -46,10 +65,10 @@ exports.getcartId = (req, res, next) => {
     const cart_id = req.params.cart_id;
 
 
-    CartWithProduct.findAll({where:{cart_id: cart_id}, raw: true})
-    .then(products => {
+    Cart.findAll({where:{cart_id: cart_id}})
+    .then(cartproducts => {
         
-        return res.status(200).json(products);
+        return res.status(200).json(cartproducts);
 
 
     })
@@ -68,23 +87,23 @@ exports.update = (req, res, next) => {
     const item_id = req.params.item_id;
     const quantity = req.body.quantity;
 
-    CartWithProduct.findOne({where:{item_id: item_id}})
-    .then(product => {
+    Cart.findOne({where:{item_id: item_id}})
+    .then(cartItem => {
 
-        if(!product){
+        if(!cartItem){
             return res.status(500).json({});
         }
 
-        product.quantity = quantity;
-        product.subtotal = ""+(product.quantity * parseInt(product.price));
-        product.save()
-        .then(product =>{
+        cartItem.quantity = quantity;
+        cartItem.subtotal = ""+(cartItem.quantity * parseInt(cartItem.price));
+        cartItem.save()
+        .then(cartItem =>{
 
-            cart_id = product.cart_id;
-            CartWithProduct.findAll({where:{cart_id: cart_id}, raw: true})
-            .then(products => {
+            cart_id = cartItem.cart_id;
+            Cart.findAll({where:{cart_id: cart_id}, raw: true})
+            .then(cartItems => {
                 
-                return res.status(200).json(products);
+                return res.status(200).json(cartItems);
 
 
             })
@@ -104,7 +123,7 @@ exports.update = (req, res, next) => {
 
 exports.empty = (req, res, next) => {
     const cart_id = req.params.cart_id;
-    CartWithProduct.destroy({cart_id: cart_id})
+    Cart.destroy({where:{cart_id: cart_id}})
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
@@ -117,7 +136,7 @@ exports.empty = (req, res, next) => {
 exports.removeProduct = (req, res, next) => {
 
     const item_id = req.params.item_id;
-    CartWithProduct.destroy({item_id: item_id})
+    Cart.destroy({where:{item_id: item_id}})
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
@@ -130,6 +149,23 @@ exports.removeProduct = (req, res, next) => {
 exports.totalAmount = (req,res,next) =>{
 
     const cart_id = req.params.cart_id;
+    Cart.findAll({where:{cart_id: cart_id}})
+    .then(cartproducts => {
+
+        totalAmount = 0
+        cartproducts.forEach(function (cartproduct) {
+            totalAmount += cartproduct.subtotal;
+        });
+        
+        return res.status(200).json({"total_amount":totalAmount});
+
+
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
 
 }
 

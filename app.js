@@ -15,6 +15,7 @@ const ProductCategories = require('./models/productcategories');
 const Attribute = require('./models/attribute');
 const AttributeValue = require('./models/attributevalue');
 const ProductAttribute = require('./models/productattribute');
+const Cart = require('./models/cart');
  
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
@@ -37,7 +38,7 @@ const customersRoutes = require('./routes/customers');
 const stripeRoutes = require('./routes/stripe');
 const departmentsRoutes = require('./routes/departments');
 const attributeRoutes = require('./routes/attributes');
-
+const shoppingcartRoutes = require('./routes/shoppingcart');
 
 
 
@@ -146,8 +147,9 @@ app.use(stripeRoutes);
 app.use(departmentsRoutes);
 app.use(categoriesRoutes);
 app.use(attributeRoutes);
+app.use(shoppingcartRoutes);
 sequelize
-.sync()
+.sync({})
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
@@ -165,7 +167,7 @@ sequelize
 .then(product =>{
     console.log("Youp")
     console.log(product);
-    app.listen(8000);
+    app.listen(process.env.PORT || 8000);
 })
 .catch(err => {
     console.log(err);

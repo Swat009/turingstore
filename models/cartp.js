@@ -38,12 +38,7 @@ const Cart = sequelize.define('cart',{
         type: Sequelize.STRING,
         allowNull: false,
 
-    },
-    product_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      
-    },
+    }
 
 
 
