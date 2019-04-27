@@ -27,8 +27,7 @@ router.put('/customer',[
 ],
 customersController.updateCustomer);
 router.post('/customer/login',customersController.loginCustomer);
-router.post('/customers/facebook',passport.authenticate('facebook-token'),customersController.loginFbCustomer);
-
+router.post('/customers/facebook',passport.authenticate('facebook-token', { scope: ['email']}),customersController.loginFbCustomer);
 
 
 module.exports = router;

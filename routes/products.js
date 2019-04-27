@@ -9,7 +9,7 @@ router.get('/products/:productId/reviews',productsController.getReview);
 router.post('/products/:productId/reviews', productsController.addReview);
 router.get('/products/:product_id/locations',productsController.getProductLocations);
 router.get('/products/:productId/details',productsController.getProduct);
-router.get('/products/:productId',productsController.getProduct);
+router.get('/products/:productId',isAuth,productsController.getProduct);
 router.get('/products',productsController.getProducts);
 
 

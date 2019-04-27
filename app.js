@@ -61,15 +61,6 @@ app.use((req, res, next) => {
     next();
 });
 app.use(morgan('combined',{stream:accessLogStream}));
-app.use(productsRoutes);
-app.use(ordersRoutes);
-app.use(customersRoutes);
-app.use(stripeRoutes);
-app.use(departmentsRoutes);
-app.use(categoriesRoutes);
-app.use(attributeRoutes);
-app.use(shoppingcartRoutes);
-
 
 
 
@@ -78,15 +69,16 @@ app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
     done(null, user);
-  });
+});
   
-  passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function(user, done) {
     done(null, user);
-  });
+});
 
 passport.use(new FacebookTokenStrategy({
     clientID: '330598714267221',
-    clientSecret: 'bbae63fa55ef259fea67d8431ef69c9c'
+    clientSecret: 'bbae63fa55ef259fea67d8431ef69c9c',
+   
   },
   function (accessToken, refreshToken, profile, done) {
     //Using next tick to take advantage of async properties
@@ -108,10 +100,12 @@ passport.use(new FacebookTokenStrategy({
   
                 });
 
-                customer.save().then(result =>{
+                customer.save()
+                .then(result =>{
 
                     //Find the user (therefore checking if it was indeed created) and return it
-                    Customers.findOne( { where : { facebookProviderId : profile.id  } }).then(function (user, err) {
+                    Customers.findOne( { where : { facebookProviderId : profile.id  } })
+                    .then(function (user, err) {
                     if(user) {
                         return done(null, user);
                     } else {
@@ -137,7 +131,14 @@ passport.use(new FacebookTokenStrategy({
 })); 
 
 
-
+app.use(productsRoutes);
+app.use(ordersRoutes);
+app.use(customersRoutes);
+app.use(stripeRoutes);
+app.use(departmentsRoutes);
+app.use(categoriesRoutes);
+app.use(attributeRoutes);
+app.use(shoppingcartRoutes);
 
 sequelize
 .sync({})
