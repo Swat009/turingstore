@@ -144,7 +144,7 @@ app.use(shoppingcartRoutes);
 app.use(taxRoutes);
 app.use(shippingRoutes);
 
-sequelize.sync({force:true})
+sequelize.sync()
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
@@ -154,7 +154,7 @@ sequelize.sync({force:true})
 .then(product =>{
 
     if(!product){
-       return Product.create({name: "book",price:"50rs",discounted_price:"Rs13",thumbnail:"",createdAt:"12 Jan",createdAt:"12 Jan"})
+       return Product.create({name: "book",price:"50",discounted_price:"13",thumbnail:"",createdAt:"12 Jan",createdAt:"12 Jan"})
     }
     return product;
 

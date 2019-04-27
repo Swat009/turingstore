@@ -1,3 +1,4 @@
+var DataTypes = require('sequelize/lib/data-types');
 const Sequelize = require('sequelize'); 
 
 const sequelize = require('../util/database');
@@ -23,7 +24,7 @@ const Cart = sequelize.define('cart',{
 
     },
     price: {
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
       
     },
@@ -35,7 +36,7 @@ const Cart = sequelize.define('cart',{
     },
     subtotal: {
 
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
 
     },

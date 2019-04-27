@@ -1,6 +1,7 @@
 const Attribute = require('../models/attribute');
 const AttributeValue = require('../models/attributevalue');
 const Product = require('../models/product');
+const ProductAttribute = require('../models/productattribute');
 
 exports.getAttributes = (req, res, next) => {
 
@@ -53,7 +54,9 @@ exports.getAttributeValues = (req, res, next) => {
     .then(attribute =>{
 
         
-        attribute.getAttributevalues()
+        attribute.getAttributevalues({ attributes: {
+            exclude: ['attributeAttributeId']
+          }})
         .then(attributevalues =>{
             return res.status(200).json(attributevalues);
         })
@@ -75,14 +78,32 @@ exports.getProductAttributes = (req, res, next) => {
 
 
         product.getAttributevalues({
+            attributes: {  include:['attribute_value_id','value'],
+            exclude:['productattribute.productProductId']},
             include: [
                         { model: Attribute,
-                        }
+                          attributes: ['name']
+                        },
                     ]
+            
         })
         .then(attributes =>{
 
-            res.status(200).json(attributes);
+            attributes_list = [];
+
+            attributes.forEach(function (attribute) {
+
+                const attribute_data = {
+                    attribute_value_id: attribute.attribute_value_id,
+                    attribute_name: attribute.attribute.name,
+                    attribute_value: attribute.value
+                }
+                attributes_list.push(attribute_data)
+
+            });
+
+
+            res.status(200).json(attributes_list);
 
         })        
 

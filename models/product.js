@@ -1,3 +1,4 @@
+var DataTypes = require('sequelize/lib/data-types');
 const Sequelize = require('sequelize'); 
 
 const sequelize = require('../util/database');
@@ -18,13 +19,13 @@ const Product = sequelize.define('product',{
     },
     price: {
 
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
 
     },
     discounted_price: {
 
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
 
     },
@@ -32,7 +33,6 @@ const Product = sequelize.define('product',{
         type: Sequelize.STRING,
         allowNull: false,
     }
-
 
 
 },{timestamps: false});

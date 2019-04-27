@@ -5,6 +5,11 @@ const Category = require('../models/category');
 
 exports.getProducts = (req, res, next) => {
 
+    page = 1;
+    limit = 20;
+    description_length = 200;
+
+
     Product.findAll({raw: true})
     .then( products =>{
 
@@ -141,6 +146,10 @@ exports.getProductLocations = (req, res, next) => {
 
 exports.getProductsInDepartment = (req, res, next) => {
 
+    page = 1;
+    limit = 20;
+    description_length = 200;
+
 
     const department_id = req.params.department_id;
 
@@ -162,6 +171,10 @@ exports.getProductsInDepartment = (req, res, next) => {
 };
 
 exports.getProductsInCategory = (req, res, next) => {
+
+    page = 1;
+    limit = 20;
+    description_length = 200;
 
 
     const category_id = req.params.category_id;
