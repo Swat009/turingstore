@@ -1,6 +1,6 @@
 const Tax = require('../models/tax'); 
 
-exports.gettaxes = (req, res, next) => {
+exports.getTaxes = (req, res, next) => {
     
     Tax.findAll()
     .then( taxes =>{
@@ -10,7 +10,7 @@ exports.gettaxes = (req, res, next) => {
 
 };
 
-exports.gettax = (req, res, next) => {
+exports.getTax = (req, res, next) => {
     
     const tax_id = req.params.tax_id;
 
