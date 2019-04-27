@@ -20,6 +20,8 @@ const Attribute = require('./models/attribute');
 const AttributeValue = require('./models/attributevalue');
 const ProductAttribute = require('./models/productattribute');
 const Cart = require('./models/cart');
+const Shipping = require('./models/shipping');
+const ShippingRegion = require('./models/shippingregion');
  
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
@@ -31,6 +33,8 @@ Attribute.hasMany(AttributeValue);
 AttributeValue.belongsTo(Attribute);
 Product.belongsToMany(AttributeValue,{through: ProductAttribute});
 AttributeValue.belongsToMany(Product,{through: ProductAttribute});
+Shipping.belongsTo(ShippingRegion);
+ShippingRegion.hasMany(Shipping);
 
 
 
@@ -43,11 +47,20 @@ const stripeRoutes = require('./routes/stripe');
 const departmentsRoutes = require('./routes/departments');
 const attributeRoutes = require('./routes/attributes');
 const shoppingcartRoutes = require('./routes/shoppingcart');
+const taxRoutes = require('./routes/tax');
+const shippingRoutes = require('./routes/shipping');
 
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
     {flags:'a'}
 );
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+  
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
 
 
 const app = express();
@@ -61,19 +74,8 @@ app.use((req, res, next) => {
     next();
 });
 app.use(morgan('combined',{stream:accessLogStream}));
-
-
-
 app.use(passport.initialize());
 app.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-  
-passport.deserializeUser(function(user, done) {
-    done(null, user);
-});
 
 passport.use(new FacebookTokenStrategy({
     clientID: '330598714267221',
@@ -139,9 +141,10 @@ app.use(departmentsRoutes);
 app.use(categoriesRoutes);
 app.use(attributeRoutes);
 app.use(shoppingcartRoutes);
+app.use(taxRoutes);
+app.use(shippingRoutes);
 
-sequelize
-.sync({})
+sequelize.sync({force:true})
 .then( result => {
     console.log(result);
     return Product.findByPk(1);
