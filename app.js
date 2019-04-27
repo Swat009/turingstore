@@ -1,7 +1,11 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const passport = require('passport');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const fs = require('fs');
 var FacebookTokenStrategy = require('passport-facebook-token');
 
 
@@ -40,40 +44,34 @@ const departmentsRoutes = require('./routes/departments');
 const attributeRoutes = require('./routes/attributes');
 const shoppingcartRoutes = require('./routes/shoppingcart');
 
-
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    {flags:'a'}
+);
 
 
 const app = express();
-
-
-// app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
-//app.use(bodyParser.json()); // application/json
-//app.use(bodyParser.urlencoded({ extended: false}));
+app.use(helmet());
 app.use(expressValidator());
-
-
-// create application/json parser
-app.use(bodyParser.json());
-// parse various different custom JSON types as JSON
-app.use(bodyParser.json({ type: 'application/*+json' }));
-// parse some custom thing into a Buffer
-app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
-// parse an HTML body into a string
-app.use(bodyParser.text({ type: 'text/html' }));
-// parse an text body into a string
-app.use(bodyParser.text({ type: 'text/plain' }));
-// create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
+app.use(morgan('combined',{stream:accessLogStream}));
+app.use(productsRoutes);
+app.use(ordersRoutes);
+app.use(customersRoutes);
+app.use(stripeRoutes);
+app.use(departmentsRoutes);
+app.use(categoriesRoutes);
+app.use(attributeRoutes);
+app.use(shoppingcartRoutes);
+
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -140,14 +138,7 @@ passport.use(new FacebookTokenStrategy({
 
 
 
-app.use(productsRoutes);
-app.use(ordersRoutes);
-app.use(customersRoutes);
-app.use(stripeRoutes);
-app.use(departmentsRoutes);
-app.use(categoriesRoutes);
-app.use(attributeRoutes);
-app.use(shoppingcartRoutes);
+
 sequelize
 .sync({})
 .then( result => {
