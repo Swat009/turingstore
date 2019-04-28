@@ -24,6 +24,7 @@ exports.add = (req, res, next) => {
         const cart = new Cart({
 
             cart_id: cart_id,
+            name: product.name,
             product_id: product_id,
             attributes: attributes,
             item_id: item_id,
@@ -33,19 +34,29 @@ exports.add = (req, res, next) => {
     
         });
     
-        cart.save().then(cart =>{
+        return cart.save()
     
-            res.status(200).json(cart);
-             
-        })
-        .catch(err => {
+    })
+    .then(cart => {
 
-            console.log(err);
-            return res.status(500).json({error:err});
+        return Cart.findAll({
+            
+            where:{cart_id: cart.cart_id},
+            attributes: [
+                "item_id",
+                "name",
+                "attributes",
+                "price",
+                "quantity",
+                "subtotal"
+            ]
         
         });
-  
+         
+    })
+    .then( cartitems =>{
 
+        res.status(200).json(cartitems);
 
     })
     .catch(err => {
@@ -65,7 +76,17 @@ exports.getcartId = (req, res, next) => {
     const cart_id = req.params.cart_id;
 
 
-    Cart.findAll({where:{cart_id: cart_id}})
+    Cart.findAll({
+        where:{cart_id: cart_id},
+        attributes: [
+            "item_id",
+            "name",
+            "attributes",
+            "price",
+            "quantity",
+            "subtotal"
+        ]
+    })
     .then(cartproducts => {
         
         return res.status(200).json(cartproducts);
@@ -87,7 +108,7 @@ exports.update = (req, res, next) => {
     const item_id = req.params.item_id;
     const quantity = req.body.quantity;
 
-    Cart.findOne({where:{item_id: item_id}})
+    Cart.findOne({where:{item_id: item_id},})
     .then(cartItem => {
 
         if(!cartItem){
@@ -96,20 +117,30 @@ exports.update = (req, res, next) => {
 
         cartItem.quantity = quantity;
         cartItem.subtotal = ""+(cartItem.quantity * parseInt(cartItem.price));
-        cartItem.save()
-        .then(cartItem =>{
+        return cartItem.save()
+        
+    })
+    .then(cartItem =>{
 
-            cart_id = cartItem.cart_id;
-            Cart.findAll({where:{cart_id: cart_id}, raw: true})
-            .then(cartItems => {
-                
-                return res.status(200).json(cartItems);
-
-
-            })
-           
-
+        cart_id = cartItem.cart_id;
+        return Cart.findAll({
+            where:{cart_id: cart_id},
+            attributes: [
+                "item_id",
+                "name",
+                "attributes",
+                "price",
+                "quantity",
+                "subtotal"
+            ]
+        
         })
+
+    })
+    .then(cartItems => {
+            
+        return res.status(200).json(cartItems);
+
 
     })
     .catch(err => {
@@ -152,10 +183,12 @@ exports.totalAmount = (req,res,next) =>{
     Cart.findAll({where:{cart_id: cart_id}})
     .then(cartproducts => {
 
-        totalAmount = 0
+        totalAmount = 0.00;
         cartproducts.forEach(function (cartproduct) {
-            totalAmount += cartproduct.subtotal;
+            totalAmount += parseFloat(cartproduct.subtotal);
         });
+
+        console.log('TotalAmount'+totalAmount);
         
         return res.status(200).json({"total_amount":totalAmount});
 

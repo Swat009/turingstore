@@ -1,4 +1,4 @@
-var stripe = require("stripe")("sk_test_95pYBb5yZ85IzhBtxdPCDKV000iUJCuKdT");
+var stripe = require("stripe")(process.env.STRIPEKEY);
 
 
 

@@ -3,6 +3,10 @@
         "USERNAME": "root",
         "PASSWORD": "Testing@123",
         "DATABASE": "store",
-        "HOST":"localhost"
+        "HOST":"localhost",
+        "FACEBOOKCLIENTID":"330598714267221",
+        "FACEBOOKCLIENTSECRET":"bbae63fa55ef259fea67d8431ef69c9c",
+        "JWTSECRETKEY":"somesupersecretsecret",
+        "STRIPEKEY":"sk_test_95pYBb5yZ85IzhBtxdPCDKV000iUJCuKdT"
     }
 }

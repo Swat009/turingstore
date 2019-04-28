@@ -78,8 +78,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new FacebookTokenStrategy({
-    clientID: '330598714267221',
-    clientSecret: 'bbae63fa55ef259fea67d8431ef69c9c',
+    clientID: process.env.FACEBOOKCLIENTID,
+    clientSecret: process.env.FACEBOOKCLIENTSECRET,
    
   },
   function (accessToken, refreshToken, profile, done) {
@@ -144,7 +144,7 @@ app.use(shoppingcartRoutes);
 app.use(taxRoutes);
 app.use(shippingRoutes);
 
-sequelize.sync({})
+sequelize.sync()
 .then( result => {
     console.log(result);
     return Product.findByPk(1);

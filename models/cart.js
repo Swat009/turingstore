@@ -9,14 +9,21 @@ const Cart = sequelize.define('cart',{
     cart_id: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+       
     },
 
     item_id: {
         type: Sequelize.STRING,
         allowNull: false,
+        primaryKey: true,
     },
-    
+    name:{
+
+        type: Sequelize.STRING,
+        allowNull: false,
+
+    },
     attributes : {
 
         type: Sequelize.STRING,
