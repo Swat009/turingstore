@@ -25,8 +25,8 @@ const ShippingRegion = require('./models/shippingregion');
  
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
-Categories.belongsTo(Departments);
-Departments.hasMany(Categories);
+Categories.belongsTo(Departments,  {foreignKey: 'department_id'});
+Departments.hasMany(Categories, {foreignKey: 'department_id'});
 Product.belongsToMany(Categories,{through: ProductCategories});
 Categories.belongsToMany(Product,{through: ProductCategories});
 Attribute.hasMany(AttributeValue);

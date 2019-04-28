@@ -21,12 +21,7 @@ const Category = sequelize.define('category',{
         type: Sequelize.STRING,
         allowNull: false,
 
-    },
-    department_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      
-    },
+    }
 
 
 
