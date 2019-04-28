@@ -3,6 +3,7 @@ const Review = require('../models/review');
 const Department = require('../models/department');
 const Category = require('../models/category'); 
 const ProductCategories = require('../models/productcategories'); 
+const Sequelize = require('sequelize'); 
 const sequelize = require('../util/database');
 
 exports.getProducts = (req, res, next) => {
@@ -84,6 +85,8 @@ exports.getReview = (req, res, next) => {
         include: [
             {
                 model: Review, as: Review.tableName,
+
+                attributes: ['name','review','rating','created_on'],
                
             }
         ]
@@ -291,3 +294,58 @@ exports.getProductsInCategory = (req, res, next) => {
     .catch(err => console.log(err));
 
 };
+
+exports.searchProduct = (req, res, next) => {
+
+    query_string = req.query.query_string;
+    page =  req.query.page || 1;
+    limit = req.query.limit || 20;
+    description_length = req.query.description_length || 200;
+
+    console.log("Product query");
+    console.log(page);
+    console.log(limit);
+    console.log(description_length);
+
+    offset = 0;
+    if(page!=1)
+    {
+        offset = page*limit;
+    }
+    console.log(offset);
+
+
+    Product.findAll({
+        
+        where: {
+            
+            name: { [Sequelize.Op.like]:'%'+query_string+'%' },
+        
+        
+        },
+        offset: offset,
+        limit: parseInt(limit),
+        attributes: [
+            'product_id',
+            'name',
+            [sequelize.fn('LEFT', sequelize.col('description'), description_length), 'description'],
+            'price',
+            'discounted_price',
+            'thumbnail'
+        ]
+     })
+    .then( products =>{
+
+
+        res.status(200).json(products);
+
+
+    })
+    .catch(err => {
+
+        console.log(err);
+
+    });
+
+
+}
