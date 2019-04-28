@@ -2,15 +2,40 @@ const Product = require('../models/product');
 const Review = require('../models/review');
 const Department = require('../models/department');
 const Category = require('../models/category'); 
+const ProductCategories = require('../models/productcategories'); 
+const sequelize = require('../util/database');
 
 exports.getProducts = (req, res, next) => {
 
-    page = 1;
-    limit = 20;
-    description_length = 200;
+    page =  req.query.page || 1;
+    limit = req.query.limit || 20;
+    description_length = req.query.description_length || 200;
+
+    console.log("Product query");
+    console.log(page);
+    console.log(limit);
+    console.log(description_length);
+
+    offset = 0;
+    if(page!=1)
+    {
+        offset = page*limit;
+    }
+    console.log(offset);
 
 
-    Product.findAll({raw: true})
+    Product.findAll({ 
+        offset: offset,
+        limit: parseInt(limit),
+        attributes: [
+            'product_id',
+            'name',
+            [sequelize.fn('LEFT', sequelize.col('description'), description_length), 'description'],
+            'price',
+            'discounted_price',
+            'thumbnail'
+        ]
+     })
     .then( products =>{
 
 
@@ -146,18 +171,42 @@ exports.getProductLocations = (req, res, next) => {
 
 exports.getProductsInDepartment = (req, res, next) => {
 
-    page = 1;
-    limit = 20;
-    description_length = 200;
+    page =  req.query.page || 1;
+    limit = req.query.limit || 20;
+    description_length = req.query.description_length || 200;
+
+    console.log("Product query");
+    console.log(page);
+    console.log(limit);
+    console.log(description_length);
+
+    offset = 0;
+    if(page!=1)
+    {
+        offset = page*limit;
+    }
+    console.log(offset);
 
 
     const department_id = req.params.department_id;
 
     Product.findAll({
-       
+
+        offset: offset,
+        limit: parseInt(limit),
+        attributes: [
+            'product_id',
+            'name',
+            [sequelize.fn('LEFT', sequelize.col('description'), description_length), 'description'],
+            'price',
+            'discounted_price',
+            'thumbnail',
+            "display"
+        ],
         include: [
             { model: Category,
               where:{departmentDepartmentId:department_id},
+              attributes:[]
             }
         ]
     })
@@ -172,9 +221,22 @@ exports.getProductsInDepartment = (req, res, next) => {
 
 exports.getProductsInCategory = (req, res, next) => {
 
-    page = 1;
-    limit = 20;
-    description_length = 200;
+
+    page =  req.query.page || 1;
+    limit = req.query.limit || 20;
+    description_length = req.query.description_length || 200;
+
+    console.log("Product query");
+    console.log(page);
+    console.log(limit);
+    console.log(description_length);
+
+    offset = 0;
+    if(page!=1)
+    {
+        offset = page*limit;
+    }
+    console.log(offset);
 
 
     const category_id = req.params.category_id;
@@ -182,9 +244,46 @@ exports.getProductsInCategory = (req, res, next) => {
     Category.findByPk(category_id) 
     .then(category =>{
 
-        category.getProducts()
+        category.getProducts({
+
+            offset: offset,
+            limit: parseInt(limit),
+            attributes: {
+                include:
+                ['product_id',
+                'name',
+                [sequelize.fn('LEFT', sequelize.col('description'), description_length), 'description'],
+                'price',
+                'discounted_price',
+                'thumbnail',
+                "display"
+                ],
+                
+            },
+            
+
+        })
         .then(products =>{
-            return res.status(200).json(products);
+
+            product_list = [];
+            products.forEach(function (product) {
+                product_data = {
+                  
+                   product_id: product.product_id,
+                   name: product.name,
+                   description: product.description,
+                   price: product.price,
+                   discounted_price: product.discounted_price,
+                   thumbnail: product.thumbnail,
+                   display: product.display,
+
+
+                };
+                product_list.push(product_data);
+                
+            });
+            console.log('########Products are ############');
+            return res.status(200).json(product_list);
          })
        
 
