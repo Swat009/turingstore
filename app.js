@@ -2,11 +2,12 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const passport = require('passport');
+
 const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
-var FacebookTokenStrategy = require('passport-facebook-token');
+const passport = require('./util/passport');
+//var FacebookTokenStrategy = require('passport-facebook-token');
 
 
 
@@ -22,11 +23,14 @@ const ProductAttribute = require('./models/productattribute');
 const Cart = require('./models/cart');
 const Shipping = require('./models/shipping');
 const ShippingRegion = require('./models/shippingregion');
+const ProductCart = require('./models/productcart');
  
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
 Categories.belongsTo(Departments,  {foreignKey: 'department_id'});
 Departments.hasMany(Categories, {foreignKey: 'department_id'});
+Product.belongsToMany(Cart,{through: ProductCart});
+Cart.belongsToMany(Product,{through: ProductCart});
 Product.belongsToMany(Categories,{through: ProductCategories});
 Categories.belongsToMany(Product,{through: ProductCategories});
 Attribute.hasMany(AttributeValue);
@@ -54,13 +58,13 @@ const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
     {flags:'a'}
 );
-passport.serializeUser(function(user, done) {
+/* passport.serializeUser(function(user, done) {
     done(null, user);
 });
   
 passport.deserializeUser(function(user, done) {
     done(null, user);
-});
+}); */
 
 
 const app = express();
@@ -77,7 +81,7 @@ app.use(morgan('combined',{stream:accessLogStream}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new FacebookTokenStrategy({
+/* passport.use(new FacebookTokenStrategy({
     clientID: process.env.FACEBOOKCLIENTID,
     clientSecret: process.env.FACEBOOKCLIENTSECRET,
    
@@ -85,7 +89,7 @@ passport.use(new FacebookTokenStrategy({
   function (accessToken, refreshToken, profile, done) {
     //Using next tick to take advantage of async properties
     process.nextTick(function () {
-      Customers.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
+        Customers.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
             if(err) {
                 return done(err);
             } 
@@ -130,7 +134,7 @@ passport.use(new FacebookTokenStrategy({
             }
         });
     });
-})); 
+}));  */
 
 
 app.use(productsRoutes);

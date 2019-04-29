@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
-
 exports.updateCustomer = (req, res, next) => {
 
     const errors = validationResult(req);
@@ -87,14 +86,27 @@ exports.updateCustomer = (req, res, next) => {
 
 exports.register = (req, res, next) =>{
 
+   
+
     const errors = validationResult(req);
     if( !errors.isEmpty()){
 
-        console.log(errors);
-        //return res.status(500).json({errors: errors});
+        console.log(errors.array());
+
+        error = errors.array()[0];
+        error_data = error.msg.split(",");
+        return res.status(500).json({
+            error:{
+                status:400,
+                code: error_data[0],
+                message: error_data[1],
+                field: error.param
+            }
+        });
 
     }
 
+    //const email = req.body.email;
     const email = req.body.email;
     const name = req.body.name;
     const password = req.body.password;

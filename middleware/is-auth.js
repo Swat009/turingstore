@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         //error.statusCode = 401;
         //throw error;
         return res.status(401).json({
-        "code": "AUT_02",
+        "code": "AUT_01",
         "message": "The apikey is not present.",
         "field": "API-KEY"}
         );

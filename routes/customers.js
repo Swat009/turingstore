@@ -9,40 +9,38 @@ const router = express.Router();
 router.put('/customer',isAuth,[
     body('email')
         .isEmail()
-        .withMessage('Please enter a valid email.')
+        .withMessage('USR_03,The email is invalid.')
         .custom( (value,{ req }) => {
-            return Customer.findOne({email: value}).then(userDoc => {
-                if (userDoc){
-                    return Promise.reject('E-mail address already exists!')
+            return Customer.findOne({where:{email: value}}).then(userDoc => {
+                if (!userDoc){
+                    return Promise.reject('USR_12,The email does not exists.')
                 }
             })
-        })
-        .normalizeEmail(),
-    body('password')
-        .trim()
-        .isLength({min: 5}),
-    body('name')
+        }),
+    body('name','USR_11,The name field should not be empty.')
         .trim()
         .not()
         .isEmpty()
-],
+
+   
+], 
 customersController.updateCustomer);
-router.post('/customer',[
+router.post('/customers',[
     body('email')
         .isEmail()
-        .withMessage('Please enter a valid email.')
+        .withMessage('USR_03,The email is invalid.')
         .custom( (value,{ req }) => {
-            return Customer.findOne({email: value}).then(userDoc => {
+            return Customer.findOne({where:{email: value}}).then(userDoc => {
                 if (userDoc){
-                    return Promise.reject('E-mail address already exists!')
+                    return Promise.reject('USR_04,The email already exists.')
                 }
             })
         })
         .normalizeEmail(),
     body('password')
         .trim()
-        .isLength({min: 5}),
-    body('name')
+        .isLength({min: 5}).withMessage('USR_10', 'The password should be atleast of length 5.'),
+    body('name','USR_11,The name field should not be empty.')
         .trim()
         .not()
         .isEmpty()

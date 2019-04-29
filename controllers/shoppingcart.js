@@ -24,13 +24,10 @@ exports.add = (req, res, next) => {
         const cart = new Cart({
 
             cart_id: cart_id,
-            name: product.name,
             product_id: product_id,
             attributes: attributes,
             item_id: item_id,
-            quantity: 1,
-            price: product.price,
-            subtotal: product.price
+            quantity: 1,        
     
         });
     
@@ -46,9 +43,13 @@ exports.add = (req, res, next) => {
                 "item_id",
                 "name",
                 "attributes",
-                "price",
                 "quantity",
-                "subtotal"
+            ],
+            include: [
+                { 
+                    model: Product,   
+                    attributes:["price"]
+                }
             ]
         
         });
