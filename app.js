@@ -2,15 +2,18 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-
 const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
 const passport = require('./util/passport');
-//var FacebookTokenStrategy = require('passport-facebook-token');
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    {flags:'a'}
+);
 
 
-
+//Models used in Project
 const Customers = require('./models/customer'); 
 const Product = require('./models/product');
 const Review = require('./models/review');
@@ -24,7 +27,7 @@ const Cart = require('./models/cart');
 const Shipping = require('./models/shipping');
 const ShippingRegion = require('./models/shippingregion');
 const ProductCart = require('./models/productcart');
- 
+ //Associations between the models
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
 Categories.belongsTo(Departments,  {foreignKey: 'department_id'});
@@ -39,9 +42,7 @@ Product.belongsToMany(AttributeValue,{through: ProductAttribute});
 AttributeValue.belongsToMany(Product,{through: ProductAttribute});
 Shipping.belongsTo(ShippingRegion);
 ShippingRegion.hasMany(Shipping);
-
-
-
+//Routes of all Controllers
 const sequelize = require('./util/database');
 const categoriesRoutes = require('./routes/categories');
 const productsRoutes = require('./routes/products');
@@ -54,19 +55,7 @@ const shoppingcartRoutes = require('./routes/shoppingcart');
 const taxRoutes = require('./routes/tax');
 const shippingRoutes = require('./routes/shipping');
 
-const accessLogStream = fs.createWriteStream(
-    path.join(__dirname,'access.log'),
-    {flags:'a'}
-);
-/* passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-  
-passport.deserializeUser(function(user, done) {
-    done(null, user);
-}); */
-
-
+//App intialization
 const app = express();
 app.use(helmet());
 app.use(expressValidator());
@@ -80,63 +69,6 @@ app.use((req, res, next) => {
 app.use(morgan('combined',{stream:accessLogStream}));
 app.use(passport.initialize());
 app.use(passport.session());
-
-/* passport.use(new FacebookTokenStrategy({
-    clientID: process.env.FACEBOOKCLIENTID,
-    clientSecret: process.env.FACEBOOKCLIENTSECRET,
-   
-  },
-  function (accessToken, refreshToken, profile, done) {
-    //Using next tick to take advantage of async properties
-    process.nextTick(function () {
-        Customers.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
-            if(err) {
-                return done(err);
-            } 
-            if(user) {
-                return done(null, user);
-            } else {
-                //Create the user
-                
-                const customer = new Customers({
-
-                  name: profile.displayName,
-                  email: profile.emails[0].value,
-                  facebookProviderId: profile.id
-  
-                });
-
-                customer.save()
-                .then(result =>{
-
-                    //Find the user (therefore checking if it was indeed created) and return it
-                    Customers.findOne( { where : { facebookProviderId : profile.id  } })
-                    .then(function (user, err) {
-                    if(user) {
-                        return done(null, user);
-                    } else {
-                        return done(err);
-                    }
-                })
-                .catch(err => {
-
-                    return done(err);
-                
-                });
-
-
-
-            });
-
-
-
-                
-            }
-        });
-    });
-}));  */
-
-
 app.use(productsRoutes);
 app.use(ordersRoutes);
 app.use(customersRoutes);

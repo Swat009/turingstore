@@ -1,15 +1,25 @@
-const validationHandler = next => result => {
-    if (result.isEmpty()) return
-    if (!next)
-      throw new Error(
-        result.array().map(i => `'${i.param}' has ${i.msg}`).join(' ')
-      )
-  else
-    return next(
-      new Error(
-       result.array().map(i => `'${i.param}' has ${i.msg}`).join('')
-      )
-    )
-  }
+const { validationResult } = require('express-validator/check');
 
-  module.exports = validationHandler;
+const validationHandler = (req,res) => {
+  
+    const errors = validationResult(req);
+    if( !errors.isEmpty()){
+
+        console.log(errors.array());
+
+        error = errors.array()[0];
+        error_data = error.msg.split(",");
+        return ["error",{
+            error:{
+                status:400,
+                code: error_data[0],
+                message: error_data[1],
+                field: error.param
+            }
+        }];
+
+    }
+    return ["ok",{}];
+}
+
+module.exports = validationHandler;

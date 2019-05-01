@@ -1,5 +1,5 @@
 //import passport from 'passport';
-
+const Customers = require('../models/customer'); 
 const passport = require('passport');
 var FacebookTokenStrategy = require('passport-facebook-token');
 

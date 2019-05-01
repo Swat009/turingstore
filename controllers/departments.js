@@ -1,5 +1,7 @@
 const { body } = require('express-validator/check');
 const Departments = require('../models/department'); 
+const validationHandler = require('../util/validator');
+
 
 exports.departments = (req, res, next) => {
 
@@ -27,6 +29,12 @@ exports.departments = (req, res, next) => {
 
 
 exports.department = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
 
 
     const department_id = req.params.department_id;
