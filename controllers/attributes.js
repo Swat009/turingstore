@@ -2,6 +2,7 @@ const Attribute = require('../models/attribute');
 const AttributeValue = require('../models/attributevalue');
 const Product = require('../models/product');
 const ProductAttribute = require('../models/productattribute');
+const validationHandler = require('../util/validator');
 
 exports.getAttributes = (req, res, next) => {
 
@@ -24,6 +25,12 @@ exports.getAttributes = (req, res, next) => {
 };
 
 exports.getAttribute = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
 
     const attribute_id = req.params.attribute_id;
 
@@ -48,6 +55,12 @@ exports.getAttribute = (req, res, next) => {
 
 exports.getAttributeValues = (req, res, next) => {
 
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
     const attribute_id = req.params.attribute_id;
 
     Attribute.findByPk(attribute_id) 
@@ -70,6 +83,12 @@ exports.getAttributeValues = (req, res, next) => {
 };
 
 exports.getProductAttributes = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
 
     const product_id = req.params.product_id;
 

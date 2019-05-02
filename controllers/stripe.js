@@ -8,7 +8,7 @@ exports.charge = (req, res, next) => {
     const order_id = req.body.order_id;
     const description = req.body.description;
     const amount = req.body.amount;
-    currency = 'usd';
+    currency = req.body.currency || 'usd';
 
     const charge = stripe.charges.create({
         amount: amount,

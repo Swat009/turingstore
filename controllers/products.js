@@ -5,8 +5,17 @@ const Category = require('../models/category');
 const ProductCategories = require('../models/productcategories'); 
 const Sequelize = require('sequelize'); 
 const sequelize = require('../util/database');
+const validationHandler = require('../util/validator');
+
 
 exports.getProducts = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
 
     page =  req.query.page || 1;
     limit = req.query.limit || 20;
@@ -54,6 +63,12 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
 
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
     const product_id = req.params.productId;
     console.log('Productkey');
     console.log(product_id);
@@ -78,6 +93,10 @@ exports.getProduct = (req, res, next) => {
 exports.getReview = (req, res, next) => {
 
     const prodId = req.params.productId;
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
 
     Product.findOne({
         where: {product_id: prodId},
@@ -225,6 +244,10 @@ exports.getProductsInDepartment = (req, res, next) => {
 exports.getProductsInCategory = (req, res, next) => {
 
 
+    const category_id = req.params.category_id;
+    if( isNaN(num1))
+
+
     page =  req.query.page || 1;
     limit = req.query.limit || 20;
     description_length = req.query.description_length || 200;
@@ -242,12 +265,12 @@ exports.getProductsInCategory = (req, res, next) => {
     console.log(offset);
 
 
-    const category_id = req.params.category_id;
+    
 
     Category.findByPk(category_id) 
     .then(category =>{
 
-        category.getProducts({
+        return category.getProducts({
 
             offset: offset,
             limit: parseInt(limit),
@@ -265,26 +288,26 @@ exports.getProductsInCategory = (req, res, next) => {
             },
             
 
-        })
-        .then(products =>{
+    })
+    .then(products =>{
 
-            product_list = [];
-            products.forEach(function (product) {
-                product_data = {
+        product_list = [];
+        products.forEach(function (product) {
+        product_data = {
                   
-                   product_id: product.product_id,
-                   name: product.name,
-                   description: product.description,
-                   price: product.price,
-                   discounted_price: product.discounted_price,
-                   thumbnail: product.thumbnail,
-                   display: product.display,
+            product_id: product.product_id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                discounted_price: product.discounted_price,
+                thumbnail: product.thumbnail,
+                display: product.display,
 
 
-                };
-                product_list.push(product_data);
+            };
+            product_list.push(product_data);
                 
-            });
+        });
             console.log('########Products are ############');
             return res.status(200).json(product_list);
          })
@@ -296,6 +319,13 @@ exports.getProductsInCategory = (req, res, next) => {
 };
 
 exports.searchProduct = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
 
     query_string = req.query.query_string;
     page =  req.query.page || 1;

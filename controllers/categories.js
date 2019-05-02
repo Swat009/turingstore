@@ -48,6 +48,13 @@ exports.categories = (req, res, next) => {
 
 exports.category = (req, res, next) => {
 
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
+
     const category_id = req.params.category_id;
 
     Category.findOne({category_id: category_id, raw: true})
@@ -68,6 +75,13 @@ exports.category = (req, res, next) => {
 }
 
 exports.getProductCategories = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
 
     const product_id = req.params.product_id;
     Product.findByPk(product_id) 
@@ -100,6 +114,13 @@ exports.getProductCategories = (req, res, next) => {
 }
 
 exports.getDepartmentCategories = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
 
     const department_id = req.params.department_id;
     Department.findByPk(department_id) 

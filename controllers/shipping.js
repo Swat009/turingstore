@@ -1,4 +1,5 @@
 const ShippingRegion = require('../models/shippingregion'); 
+const validationHandler = require('../util/validator');
 
 exports.getShippingRegions = (req, res, next) => {
 
@@ -15,6 +16,13 @@ exports.getShippingRegions = (req, res, next) => {
 };
 
 exports.getShippingRegion = (req, res, next) => {
+
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
+
 
     const shipping_region_id = req.params.shipping_region_id;
     ShippingRegion.findByPk(shipping_region_id)

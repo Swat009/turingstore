@@ -1,17 +1,20 @@
 const { body,param } = require('express-validator/check')
 exports.validate = (method) => {
 switch (method) {
-    case 'department': {
+ 
+
+    case 'getTax':{
         return [
-            param('department_id','USR_02,The department_id is required.')
+
+            param('item_id','USR_02,The item_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('Deparment id  must be an integer.')
-        ];
+            .isInt().withMessage('USR_02,The item_id is integer value.'),
+
+        ]
     }
 
    
-
   
 }}
