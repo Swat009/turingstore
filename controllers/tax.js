@@ -7,6 +7,13 @@ exports.getTaxes = (req, res, next) => {
 
         return res.status(200).json(taxes);
     })
+    .catch(err => {
+
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });  
 
 };
 
@@ -26,6 +33,13 @@ exports.getTax = (req, res, next) => {
 
         return res.status(200).json(tax);
     })
+    .catch(err => {
+
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });  
 
 
 };

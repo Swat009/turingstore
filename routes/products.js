@@ -11,7 +11,7 @@ router.get('/products/:productId/reviews',productsValidator.validate('getReview'
 router.post('/products/:productId/reviews', productsValidator.validate('addReview'),productsController.addReview);
 router.get('/products/:product_id/locations',productsValidator.validate('getProductLocations'),productsController.getProductLocations);
 router.get('/products/:productId/details',productsValidator.validate('getProduct'),productsController.getProduct);
-router.get('/products/:productId',productsValidator.validate('getProduct'),productsController.getProduct);
+router.get('/products/:productId',productsController.getProduct);
 router.get('/products',productsValidator.validate('getProducts'),productsController.getProducts);
 
 

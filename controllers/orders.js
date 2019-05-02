@@ -2,23 +2,6 @@ const { validationResult } = require('express-validator/check');
 const { body } = require('express-validator/check');
 
 
-exports.validate = (method) => {
-    switch (method) {
-    
-
-        case 'order': {
-            return [
-                
-                //body('customer_id').exists(),
-                //body('shipping_id').exists(), 
-                //body('tax_id').exists()
-            ]
-        }
-    }
-}
-
-
-
 exports.createOrder = (req, res, next) => {
  
     const errors = validationResult(req);

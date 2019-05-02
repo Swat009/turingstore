@@ -62,8 +62,10 @@ exports.add = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
-        return res.status(500).json({error:err});
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
       
     });
 
@@ -96,7 +98,10 @@ exports.getcartId = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
 
@@ -146,8 +151,10 @@ exports.update = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 
@@ -159,8 +166,10 @@ exports.empty = (req, res, next) => {
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 }
@@ -172,8 +181,10 @@ exports.removeProduct = (req, res, next) => {
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 
@@ -197,8 +208,10 @@ exports.totalAmount = (req,res,next) =>{
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 }

@@ -14,6 +14,7 @@
   "author": "swatantra kumar",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^2.2.1",
     "bcryptjs": "^2.4.3",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
@@ -25,7 +26,8 @@
     "passport-facebook-token": "^3.3.0",
     "sequelize": "^5.6.1",
     "stripe": "^6.29.0",
-    "uniqid": "^5.0.3"
+    "uniqid": "^5.0.3",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.11"

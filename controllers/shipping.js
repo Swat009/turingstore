@@ -3,14 +3,16 @@ const validationHandler = require('../util/validator');
 
 exports.getShippingRegions = (req, res, next) => {
 
-
     ShippingRegion.findAll()
     .then(shippingregions =>{
 
         return res.status(200).json(shippingregions);
     })
+    .catch(err => {
 
+        next(err);
 
+    });
 
 
 };
@@ -22,17 +24,21 @@ exports.getShippingRegion = (req, res, next) => {
     {
         return res.status(400).json(validation_result[1]);
     }
-
-
     const shipping_region_id = req.params.shipping_region_id;
     ShippingRegion.findByPk(shipping_region_id)
     .then(shippingregion =>{
 
-        shippingregion.getShipping()
-        .then(shipping =>{
-            return res.status(200).json(shipping);
-        })
+        return shippingregion.getShipping();
+
     })
+    .then(shipping =>{
+        return res.status(200).json(shipping);
+    })
+    .catch(err => {
+
+        next(err);
+
+    });
 
 
 };
