@@ -9,14 +9,15 @@ exports.getAttributes = (req, res, next) => {
     Attribute.findAll({raw: true})
     .then( attributes =>{
 
-
         res.status(200).json(attributes);
-
 
     })
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
 
@@ -44,8 +45,10 @@ exports.getAttribute = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
     
@@ -76,7 +79,12 @@ exports.getAttributeValues = (req, res, next) => {
         
 
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 
     
 
@@ -96,40 +104,43 @@ exports.getProductAttributes = (req, res, next) => {
     .then( product =>{
 
 
-        product.getAttributevalues({
+        return product.getAttributevalues({
             attributes: {  include:['attribute_value_id','value'],
             exclude:['productattribute.productProductId']},
             include: [
                         { model: Attribute,
                           attributes: ['name']
                         },
-                    ]
-            
+                    ]         
         })
-        .then(attributes =>{
-
-            attributes_list = [];
-
-            attributes.forEach(function (attribute) {
-
-                const attribute_data = {
-                    attribute_value_id: attribute.attribute_value_id,
-                    attribute_name: attribute.attribute.name,
-                    attribute_value: attribute.value
-                }
-                attributes_list.push(attribute_data)
-
-            });
-
-
-            res.status(200).json(attributes_list);
-
-        })        
+   
 
     })
+    .then(attributes =>{
+
+        attributes_list = [];
+
+        attributes.forEach(function (attribute) {
+
+            const attribute_data = {
+                attribute_value_id: attribute.attribute_value_id,
+                attribute_name: attribute.attribute.name,
+                attribute_value: attribute.value
+            }
+            attributes_list.push(attribute_data)
+
+        });
+
+
+        res.status(200).json(attributes_list);
+
+    })        
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
     

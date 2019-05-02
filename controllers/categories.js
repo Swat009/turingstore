@@ -38,8 +38,10 @@ exports.categories = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 
@@ -66,7 +68,10 @@ exports.category = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
 
@@ -107,7 +112,10 @@ exports.getProductCategories = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
     
@@ -133,8 +141,10 @@ exports.getDepartmentCategories = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
     
 }

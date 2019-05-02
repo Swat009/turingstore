@@ -17,15 +17,22 @@ exports.charge = (req, res, next) => {
         source: token,
         metadata: {order_id: order_id}
 
-    },function(err, charge) {
-        if (err && err.type === 'StripeCardError') {
-            console.log(err);// The card has been declined
-        } else {
-            res.send({
-                success:true,
-                data: charge
-            });
+    })
+    .then(charge=>{
+
+        res.send({
+            success:true,
+            data: charge
+        });
+
+
+    })
+    .catch(err => {
+
+        if(!err.statusCode){
+            err.statusCode = 500;
         }
-    });
+        next(err);
+    });   
 
 };

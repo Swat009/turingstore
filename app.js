@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const helmet = require('helmet');
 const morgan = require('morgan');
+var winston = require('./util/winston');
 const fs = require('fs');
 const passport = require('./util/passport');
 
@@ -66,7 +67,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
-app.use(morgan('combined',{stream:accessLogStream}));
+app.use(morgan('combined',{ stream: winston.stream }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(productsRoutes);
@@ -79,27 +80,37 @@ app.use(attributeRoutes);
 app.use(shoppingcartRoutes);
 app.use(taxRoutes);
 app.use(shippingRoutes);
+app.use(function(err, req, res, next) {
+    // always log the error here
+
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // add this line to include winston logging
+    winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+    // send different response based on content type
+    res.format({
+      'text/plain': function(){
+        res.status(500).send('500 - Internal Server Error');
+      },
+  
+      'text/html': function(){
+        res.status(500).send('<h1>Internal Server Error</h1>');
+      },
+  
+      'application/json': function(){
+        res.send({ error: 'internal_error' });
+      }
+    });
+});
 
 sequelize.sync()
 .then( result => {
+   // throw new Error('Doh!');
     console.log(result);
-    return Product.findByPk(1);
-
-   
-})
-.then(product =>{
-
-    if(!product){
-       return Product.create({name: "book",price:"50",discounted_price:"13",thumbnail:"",description:"12 Jan sdsa sadad adsasd asdasd asdasd asdadsasfafsadsdsds dsasddd sdsadddsaad asddasdaad sadsdad aa"});
-    }
-    return product;
-
-})
-.then(product =>{
-    console.log("Youp")
-    console.log(product);
-    app.listen(process.env.PORT || 8000);
+    app.listen(process.env.PORT || 8000);  
 })
 .catch(err => {
-    console.log(err);
+   // winston.info(console.log(console.error));
 });

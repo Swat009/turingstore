@@ -55,7 +55,10 @@ exports.getProducts = (req, res, next) => {
     })
     .catch(err => {
 
-        console.log(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
 
     });
         
@@ -75,16 +78,14 @@ exports.getProduct = (req, res, next) => {
 
     Product.findByPk(product_id)
     .then( product =>{
-
-
         res.status(200).json(product);
-
-
     })
     .catch(err => {
 
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
         
 };
@@ -119,10 +120,10 @@ exports.getReview = (req, res, next) => {
 
     })
     .catch(err => {
-
-        console.log(err);
-        return res.status(500).json(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);  
     });
         
 };
@@ -143,29 +144,28 @@ exports.addReview = (req, res, next) => {
     Product.findByPk(product_id)
     .then(product =>{
 
-        product.createReview({
+        return product.createReview({
             name: "Test User",
             review: review,
             rating: rating,
             created_on: n
         })
-        .then(result =>{
+       
+    
+    })
+    .then(result =>{
 
-             res.status(200).json({status:"Success"})
-    
-        })
-        .catch(err => {
-    
-                res.status(400).json({
-               
-                err: err
-        
-            });
-    
-        });
+        res.status(200).json({status:"Success"})
 
     })
-    .catch(err => console.log(err));
+    .catch(err =>{ 
+        
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);  
+        
+    });
    
 };
 
@@ -176,18 +176,20 @@ exports.getProductLocations = (req, res, next) => {
 
     Product.findByPk(product_id) 
     .then(product =>{
-
-        
-        product.getCategories({
-           
-        })
-        .then(categories =>{
-            return res.status(200).json(categories);
-        })
-        
+   
+        return product.getCategories()
 
     })
-    .catch(err => console.log(err));
+    .then(categories =>{
+        return res.status(200).json(categories);
+    })
+    .catch(err => {
+    
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
   
 };
 
@@ -237,7 +239,12 @@ exports.getProductsInDepartment = (req, res, next) => {
            return res.status(200).json(products)
 
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 
 };
 
@@ -314,7 +321,13 @@ exports.getProductsInCategory = (req, res, next) => {
        
 
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 
 };
 
@@ -372,9 +385,10 @@ exports.searchProduct = (req, res, next) => {
 
     })
     .catch(err => {
-
-        console.log(err);
-
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
     });
 
 
