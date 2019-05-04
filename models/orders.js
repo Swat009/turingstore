@@ -1,10 +1,8 @@
 const Sequelize = require('sequelize'); 
-
+var DataTypes = require('sequelize/lib/data-types');
 const sequelize = require('../util/database');
 
 const Order = sequelize.define('order',{
-
-   
 
     order_id: {
         type: Sequelize.INTEGER,
@@ -15,8 +13,8 @@ const Order = sequelize.define('order',{
     total_amount: {
 
         type: DataTypes.DECIMAL(10,2),
-        allowNull: false,
-
+        defaultValue: 0,
+        
     },
     comments:{
 
@@ -33,16 +31,10 @@ const Order = sequelize.define('order',{
         type: Sequelize.INTEGER,
 
     },
-    customer_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-    },
-    shipping_id:{
-        type: Sequelize.INTEGER,
-    },
     tax_id:{
 
         type: Sequelize.INTEGER,
+        allowNull: false,
     },
     comments:{
 
@@ -51,11 +43,6 @@ const Order = sequelize.define('order',{
 
     }
 
-
-
-    
-
-
 },{timestamps: false});
 
-module.exports = Department;
+module.exports = Order;

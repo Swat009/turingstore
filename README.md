@@ -10,5 +10,8 @@ Use the package manager [npm](https://www.npmjs.com/) to install all the require
 npm install 
 ```
 
+## API Reference
+All endpoints, inputs, and outputs are exactly as per [this](https://backendapi.turing.com/docs/) swagger documentation. 
+
 
 ## Usage

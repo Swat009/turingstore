@@ -8,11 +8,11 @@ var winston = require('./util/winston');
 const fs = require('fs');
 const passport = require('./util/passport');
 
-const accessLogStream = fs.createWriteStream(
+/* const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
     {flags:'a'}
 );
-
+ */
 
 //Models used in Project
 const Customers = require('./models/customer'); 
@@ -25,16 +25,21 @@ const Attribute = require('./models/attribute');
 const AttributeValue = require('./models/attributevalue');
 const ProductAttribute = require('./models/productattribute');
 const Cart = require('./models/cart');
+const CartItem = require('./models/cartitem');
 const Shipping = require('./models/shipping');
 const ShippingRegion = require('./models/shippingregion');
 const ProductCart = require('./models/productcart');
+const Order = require('./models/orders');
+const OrderDetail = require('./models/orderdetail');
  //Associations between the models
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
 Categories.belongsTo(Departments,  {foreignKey: 'department_id'});
 Departments.hasMany(Categories, {foreignKey: 'department_id'});
-Product.belongsToMany(Cart,{through: ProductCart});
-Cart.belongsToMany(Product,{through: ProductCart});
+Product.belongsToMany(Cart,{through: CartItem});
+Cart.belongsToMany(Product,{through: CartItem});
+Order.belongsToMany(Product, { through: OrderDetail });
+Product.belongsToMany(Order, { through: OrderDetail });
 Product.belongsToMany(Categories,{through: ProductCategories});
 Categories.belongsToMany(Product,{through: ProductCategories});
 Attribute.hasMany(AttributeValue);
@@ -43,6 +48,22 @@ Product.belongsToMany(AttributeValue,{through: ProductAttribute});
 AttributeValue.belongsToMany(Product,{through: ProductAttribute});
 Shipping.belongsTo(ShippingRegion);
 ShippingRegion.hasMany(Shipping);
+Order.belongsTo(Customers);
+Customers.hasMany(Order);
+Order.belongsTo(Shipping);
+Shipping.hasMany(Order);
+
+//Cart.hasMany(Order);
+
+//Order.belongsToMany(Product, {through: OrderDetail});
+//Product.belongsToMany(Order, {through: OrderDetail});
+//OrderDetail.hasOne(Cart);
+
+
+
+
+
+
 //Routes of all Controllers
 const sequelize = require('./util/database');
 const categoriesRoutes = require('./routes/categories');
@@ -86,6 +107,8 @@ app.use(function(err, req, res, next) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+    //console.log(err);
+
     // add this line to include winston logging
     winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
@@ -112,5 +135,5 @@ sequelize.sync()
     app.listen(process.env.PORT || 8000);  
 })
 .catch(err => {
-   // winston.info(console.log(console.error));
+  console.log(err);
 });
