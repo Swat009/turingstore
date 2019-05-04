@@ -36,3 +36,11 @@ With these in place we can start the prod server with:
 ```bash
 npm start
 ```
+
+The dev environment variables can be set in the file nodemon.json in root directory of this project.
+
+The dev server can be run by the command:
+
+```bash
+npm run startdev
+```
