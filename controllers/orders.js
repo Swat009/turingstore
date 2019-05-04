@@ -12,7 +12,7 @@ exports.createOrder = (req, res, next) => {
     const customer_id = req.body.customer_id;
     const shipping_id = req.body.shipping_id;
     const tax_id = req.body.tax_id;
-    let fetchedCart;
+    
 
     Cart.findByPk(cart_id)
     .then(cart =>{
@@ -70,19 +70,6 @@ exports.createOrder = (req, res, next) => {
         }
         next(err);
     });
-
-    
-    
-
- /*    Cart.findAll({where:{cart_id:cart_id}})
-    .then(cartItems=>{
-
-        Order.
-
-
-    })
- */
-
    
 };
 

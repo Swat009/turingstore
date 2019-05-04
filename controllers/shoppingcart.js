@@ -3,6 +3,28 @@ const Cart = require('../models/cart');
 const Product = require('../models/product');
 
 
+genereteResult = (products)=>{
+
+    cart_data = []
+    products.forEach(function (product) {
+
+        cart_item_data = {
+
+            item_id:product.cartitem.item_id,
+            name:product.name,
+            attributes:product.cartitem.attributes,
+            price:product.price,
+            quantity:product.cartitem.quantity,
+            subtotal:(parseFloat(product.price)*parseInt(product.cartitem.quantity))
+
+        }
+        cart_data.push(cart_item_data);
+    });
+
+    return cart_data;
+    
+}
+
 exports.generateUniqueId = (req, res, next) => {
 
     cart_id = uniqid();
@@ -11,13 +33,10 @@ exports.generateUniqueId = (req, res, next) => {
 }
 
 exports.add = (req, res, next) => {
-
-   
-    
     const cart_id = req.body.cart_id;
     const product_id = req.body.product_id;
     const attributes = req.body.attributes;
-    const item_id = cart_id+product_id;
+    const item_id = cart_id+'-'+product_id;
     let fetchedCart;
     newQuantity = 1;
 
@@ -65,7 +84,12 @@ exports.add = (req, res, next) => {
     })
     .then( cartitem =>{
 
-        res.status(200).json(cartitem);
+        return fetchedCart.getProducts();
+
+    })
+    .then(products=>{
+
+        return res.status(200).json(genereteResult(products));
 
     })
     .catch(err => {
@@ -74,9 +98,7 @@ exports.add = (req, res, next) => {
             err.statusCode = 500;
         }
         next(err);
-      
     });
-
 
 }
 
@@ -86,22 +108,15 @@ exports.getcartId = (req, res, next) => {
 
     const cart_id = req.params.cart_id;
 
+    Cart.findByPk(cart_id)
+    .then( cart =>{
 
-    Cart.findAll({
-        where:{cart_id: cart_id},
-        attributes: [
-            "item_id",
-            "name",
-            "attributes",
-            "price",
-            "quantity",
-            "subtotal"
-        ]
+        return cart.getProducts();
     })
-    .then(cartproducts => {
-        
-        return res.status(200).json(cartproducts);
+    .then(products =>{
+        console.log('Entered');
 
+        return res.status(200).json(genereteResult(products));
 
     })
     .catch(err => {
@@ -117,44 +132,50 @@ exports.getcartId = (req, res, next) => {
 } 
 
 
+
 exports.update = (req, res, next) => {
 
+    
     const item_id = req.params.item_id;
+    const item_data = item_id.split("-");
+    const cart_id = item_data[0];
+    const product_id = item_data[1];
     const quantity = req.body.quantity;
+    let fetchedCart;
 
-    Cart.findOne({where:{item_id: item_id},})
-    .then(cartItem => {
-
-        if(!cartItem){
-            return res.status(500).json({});
+    Cart.findByPk(cart_id)
+    .then(cart =>{
+        fetchedCart =cart;
+        return cart.getProducts({where:{product_id:product_id}});
+    })
+    .then(products=>{
+        let product;
+        if (products.length > 0) {
+            product = products[0];
         }
 
-        cartItem.quantity = quantity;
-        cartItem.subtotal = ""+(cartItem.quantity * parseInt(cartItem.price));
-        return cartItem.save()
-        
+        if (product) {
+           
+            return product;
+        }
+        return Product.findByPk(product_id);
     })
-    .then(cartItem =>{
+    .then(product =>{
+        console.log('Product is');
+        console.log(product);
+        return fetchedCart.addProduct(product, {through: { 
+            quantity: quantity,
 
-        cart_id = cartItem.cart_id;
-        return Cart.findAll({
-            where:{cart_id: cart_id},
-            attributes: [
-                "item_id",
-                "name",
-                "attributes",
-                "price",
-                "quantity",
-                "subtotal"
-            ]
-        
-        })
+        }});
+    })
+    .then( cartitem =>{
+
+        return fetchedCart.getProducts();
 
     })
-    .then(cartItems => {
-            
-        return res.status(200).json(cartItems);
+    .then(products=>{
 
+        return res.status(200).json(genereteResult(products));
 
     })
     .catch(err => {
@@ -170,8 +191,16 @@ exports.update = (req, res, next) => {
 
 exports.empty = (req, res, next) => {
     const cart_id = req.params.cart_id;
-    Cart.destroy({where:{cart_id: cart_id}})
-    .then( () =>{  return res.status(200).json({})}) 
+    Cart.findByPk(cart_id)
+    .then(cart =>{
+        
+        return cart.setProducts(null);
+
+    })
+    .then(result=>{
+
+        return res.status(200).json({});
+    }) 
     .catch(err => {
 
         if(!err.statusCode){
@@ -185,7 +214,19 @@ exports.empty = (req, res, next) => {
 exports.removeProduct = (req, res, next) => {
 
     const item_id = req.params.item_id;
-    Cart.destroy({where:{item_id: item_id}})
+    const item_data = item_id.split("-");
+    const cart_id = item_data[0];
+    const product_id = item_data[1];
+
+    Cart.findByPk(cart_id)
+    .then( cart =>{
+
+        return cart.getProducts({where:{product_id:product_id}});
+    })
+    .then(products =>{
+        const product = products[0];
+        return product.cartitem.destroy();
+    })
     .then( () =>{  return res.status(200).json({})}) 
     .catch(err => {
 
@@ -200,18 +241,22 @@ exports.removeProduct = (req, res, next) => {
 exports.totalAmount = (req,res,next) =>{
 
     const cart_id = req.params.cart_id;
-    Cart.findAll({where:{cart_id: cart_id}})
-    .then(cartproducts => {
+    Cart.findByPk(cart_id)
+    .then( cart =>{
+
+        return cart.getProducts();
+    })
+    .then(products =>{
 
         totalAmount = 0.00;
-        cartproducts.forEach(function (cartproduct) {
-            totalAmount += parseFloat(cartproduct.subtotal);
+        products.forEach(function (product) {
+            totalAmount += (parseFloat(product.price)*parseInt(product.cartitem.quantity));
         });
 
         console.log('TotalAmount'+totalAmount);
         
         return res.status(200).json({"total_amount":totalAmount});
-
+       
 
     })
     .catch(err => {
