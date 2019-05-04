@@ -8,7 +8,7 @@ const customersValidator = require('../middleware/customervalidator');
 
 const router = express.Router();
 router.put('/customer',isAuth,customersValidator.validate('updateCustomer'), customersController.updateCustomer);
-router.post('/customers',isAuth,customersValidator.validate('register'),customersController.register);
+router.post('/customers',customersValidator.validate('register'),customersController.register);
 router.put('/customers/address',isAuth,customersValidator.validate('putAddress'),customersController.putAddress);
 router.put('/customers/creditCard',isAuth,customersValidator.validate('putcreditCard'),customersController.putcreditCard);
 router.post('/customers/login',customersValidator.validate('loginCustomer'),customersController.loginCustomer);

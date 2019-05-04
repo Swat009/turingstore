@@ -35,6 +35,7 @@ exports.validate = (method) => {
             ]
         }
         
+        
       
         case 'getShortDetail': {
             return [

@@ -1,4 +1,5 @@
-const { body } = require('express-validator/check')
+const { body } = require('express-validator/check');
+const Customer = require('../models/customer'); 
 exports.validate = (method) => {
 switch (method) {
     case 'updateCustomer': {
