@@ -16,7 +16,7 @@ All endpoints, inputs, and outputs are exactly as per [this](https://backendapi.
 
 ## Usage
 
-To  use this backend in production the following environments need to be set:
+To  use this backend in production the following environment variables need to be set:
 
 ```bash
 
@@ -31,7 +31,7 @@ To  use this backend in production the following environments need to be set:
 
 ```
 
-With these in place we can start the prod server with:-
+With these in place we can start the prod server with:
 
 ```bash
 npm start
