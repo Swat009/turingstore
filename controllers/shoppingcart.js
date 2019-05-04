@@ -11,53 +11,61 @@ exports.generateUniqueId = (req, res, next) => {
 }
 
 exports.add = (req, res, next) => {
+
+   
     
     const cart_id = req.body.cart_id;
     const product_id = req.body.product_id;
     const attributes = req.body.attributes;
     const item_id = cart_id+product_id;
+    let fetchedCart;
+    newQuantity = 1;
 
-    Product.findByPk(product_id)
-    .then(product =>{
-        console.log("Product");
-        console.log(product);
-        const cart = new Cart({
+    Cart.findByPk(cart_id)
+    .then(cart =>{
 
-            cart_id: cart_id,
-            product_id: product_id,
-            attributes: attributes,
-            item_id: item_id,
-            quantity: 1,        
-    
-        });
-    
-        return cart.save()
-    
+        if(!cart)
+        {
+            const cart = new Cart({
+
+                cart_id: cart_id,
+                
+            });
+        
+            return cart.save()
+        }
+        return cart;
     })
     .then(cart => {
-
-        return Cart.findAll({
-            
-            where:{cart_id: cart.cart_id},
-            attributes: [
-                "item_id",
-                "name",
-                "attributes",
-                "quantity",
-            ],
-            include: [
-                { 
-                    model: Product,   
-                    attributes:["price"]
-                }
-            ]
-        
-        });
-         
+        fetchedCart = cart;
+        return cart.getProducts({ where: { product_id: product_id} });
     })
-    .then( cartitems =>{
+    .then(products=>{
+        let product;
+        if (products.length > 0) {
+            product = products[0];
+        }
 
-        res.status(200).json(cartitems);
+        if (product) {
+            const oldQuantity = product.cartItem.quantity;
+            newQuantity = oldQuantity + 1;
+            return product;
+        }
+        return Product.findByPk(product_id);
+    })
+    .then(product =>{
+        console.log('Product is');
+        console.log(product);
+        return fetchedCart.addProduct(product, {through: { 
+            quantity: newQuantity,
+            item_id: item_id,
+            attributes: attributes
+
+        }});
+    })
+    .then( cartitem =>{
+
+        res.status(200).json(cartitem);
 
     })
     .catch(err => {

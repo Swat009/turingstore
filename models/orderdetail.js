@@ -1,47 +1,43 @@
 const Sequelize = require('sequelize'); 
-
+var DataTypes = require('sequelize/lib/data-types');
 const sequelize = require('../util/database');
 
-const Cart = sequelize.define('cart',{
+const OrderDetail = sequelize.define('orderdetail',{
+
+   
 
     item_id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name: {
 
         type: Sequelize.STRING,
         allowNull: false,
 
     },
-    attributes : {
+    atttributes:{
+       
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'yo',
 
+    },
+    product_name:{
         type: Sequelize.STRING,
         allowNull: false,
 
     },
-    price: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      
-    },
-    quantity: {
-
+    quantity:{
         type: Sequelize.INTEGER,
         allowNull: false,
 
     },
-    subtotal: {
+    unit_cost:{
 
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
 
     }
+    
 
 
+},{timestamps: false});
 
-});
-
-module.exports = Cart;
+module.exports = OrderDetail;
