@@ -7,6 +7,7 @@ const morgan = require('morgan');
 var winston = require('./util/winston');
 const fs = require('fs');
 const passport = require('./util/passport');
+const errorController = require('./controllers/error');
 
 /* const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
@@ -101,32 +102,10 @@ app.use(attributeRoutes);
 app.use(shoppingcartRoutes);
 app.use(taxRoutes);
 app.use(shippingRoutes);
-app.use(function(err, req, res, next) {
-    // always log the error here
+app.use(errorController.get404);
+app.use(errorController.handleError);
 
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    //console.log(err);
-
-    // add this line to include winston logging
-    winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
-    // send different response based on content type
-    res.format({
-      'text/plain': function(){
-        res.status(500).send('500 - Internal Server Error');
-      },
-  
-      'text/html': function(){
-        res.status(500).send('<h1>Internal Server Error</h1>');
-      },
-  
-      'application/json': function(){
-        res.send({ error: 'internal_error' });
-      }
-    });
-});
 
 sequelize.sync()
 .then( result => {
