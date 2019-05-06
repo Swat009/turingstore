@@ -4,8 +4,6 @@ const taxValidator = require("../middleware/taxvalidator");
 const taxController = require("../controllers/tax");
 
 const router = express.Router();
-
+router.get('/tax/:tax_id',taxValidator.validate('getTax'),taxController.getTax);
 router.get('/tax',taxController.getTaxes);
-router.get('/tax/tax_id',taxValidator.validate('getTax'),taxController.getTax);
-
 module.exports = router;

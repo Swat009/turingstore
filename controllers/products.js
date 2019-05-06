@@ -67,6 +67,12 @@ exports.getProduct = (req, res, next) => {
 
     Product.findByPk(product_id)
     .then( product =>{
+
+        if(!product)
+        {
+            return res.status(200).json({error:'Product not found'});
+        }
+
         res.status(200).json(product);
     })
     .catch(err => {
@@ -125,6 +131,12 @@ exports.addReview = (req, res, next) => {
     Product.findByPk(product_id)
     .then(product =>{
 
+        if(!product)
+        {
+            return res.status(200).json({error:"No product found"});
+
+        }
+
         return product.createReview({
           
             review: review,
@@ -151,9 +163,20 @@ exports.addReview = (req, res, next) => {
 
 exports.getProductLocations = (req, res, next) => {
 
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
     const product_id = req.params.product_id;
     Product.findByPk(product_id) 
     .then(product =>{
+
+        if(!product)
+        {
+            res.status(200).json({error:'Product not found'});
+            throw new Error('Product not found');
+        }
    
         return product.getCategories()
 
@@ -172,7 +195,11 @@ exports.getProductLocations = (req, res, next) => {
 };
 
 exports.getProductsInDepartment = (req, res, next) => {
-
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
     page =  req.query.page || 1;
     limit = req.query.limit || 20;
     description_length = req.query.description_length || 200;
@@ -194,14 +221,20 @@ exports.getProductsInDepartment = (req, res, next) => {
         ],
         include: [
             { model: Category,
-              where:{departmentDepartmentId:department_id},
+              where:{department_id:department_id},
               attributes:[]
             }
         ]
     })
     .then(products =>{
 
-           return res.status(200).json(products)
+        if(!products)
+        {
+            res.status(200).json({error:'Products not found'});
+            throw new Error('Products not found');
+        }
+
+        return res.status(200).json(products)
 
     })
     .catch(err => {
@@ -214,6 +247,12 @@ exports.getProductsInDepartment = (req, res, next) => {
 };
 
 exports.getProductsInCategory = (req, res, next) => {
+    
+    validation_result = validationHandler(req,res);
+    if(validation_result[0]=="error")
+    {
+        return res.status(400).json(validation_result[1]);
+    }
     const category_id = req.params.category_id;
     page =  req.query.page || 1;
     limit = req.query.limit || 20;
@@ -222,6 +261,12 @@ exports.getProductsInCategory = (req, res, next) => {
     offset = (page-1)*limit;
     Category.findByPk(category_id) 
     .then(category =>{
+
+        if(!category)
+        {
+            res.status(200).json({error:'Category not found'});
+            throw new Error('Caregory not found');
+        }
 
         return category.getProducts({
 

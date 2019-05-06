@@ -38,6 +38,12 @@ exports.getAttribute = (req, res, next) => {
     Attribute.findByPk(attribute_id)
     .then( attribute =>{
 
+        if(!attribute)
+        {
+            return res.status(200).json({error:'Attribute not found'});
+            
+        }
+
 
         res.status(200).json(attribute);
 

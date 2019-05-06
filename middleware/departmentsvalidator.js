@@ -7,11 +7,7 @@ switch (method) {
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('Deparment id  must be an integer.')
+            .isInt().withMessage('USR_02,Deparment id  must be an integer.')
         ];
     }
-
-   
-
-  
 }}

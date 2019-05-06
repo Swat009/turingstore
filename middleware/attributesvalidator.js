@@ -6,11 +6,11 @@ switch (method) {
     case 'getAttributeValues':{
         return [
 
-            param('attribute_id','USR_02,The attribute_id is required.')
+            param('attribute_id','ATT_01,The attribute_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The attribute_id is integer value.'),
+            .isInt().withMessage('ATT_01,The attribute_id must be an integer value.'),
 
         ]
     }

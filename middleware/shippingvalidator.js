@@ -7,11 +7,11 @@ switch (method) {
 
         return [
 
-            param('shipping_region_id','USR_02,The shipping_region_id  is required.')
+            param('shipping_region_id','SHI_02,The shipping_region_id  is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The shipping_region_id  is integer value.'),
+            .isInt().withMessage('SHI_02,The shipping_region_id  must be an integer value.'),
 
         ]
     }

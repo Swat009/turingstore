@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/categories/inProduct/:product_id',categoriesValidator.validate('getProductCategories'),categoriesController.getProductCategories);
 router.get('/categories/inDepartment/:department_id',categoriesValidator.validate('getDepartmentCategories'),categoriesController.getDepartmentCategories);
 router.get('/categories/:category_id',categoriesValidator.validate('category'),categoriesController.category);
-router.get('/categories',categoriesController.categories);
+router.get('/categories',categoriesValidator.validate('categories'),categoriesController.categories);
 
 
 

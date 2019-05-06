@@ -1,5 +1,5 @@
 const Tax = require('../models/tax'); 
-
+const validationHandler = require('../util/validator');
 exports.getTaxes = (req, res, next) => {
     
     Tax.findAll()

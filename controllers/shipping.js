@@ -28,7 +28,13 @@ exports.getShippingRegion = (req, res, next) => {
     ShippingRegion.findByPk(shipping_region_id)
     .then(shippingregion =>{
 
-        return shippingregion.getShipping();
+        if(!shippingregion)
+        {
+            res.status(200).json({error:'Shipping region not found'});
+            throw new Error('Shipping reason not found');
+        }
+
+        return shippingregion.getShippings();
 
     })
     .then(shipping =>{

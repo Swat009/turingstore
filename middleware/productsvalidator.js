@@ -90,7 +90,6 @@ switch (method) {
             query('description_length')
             .isInt().withMessage('PRO_05,Description Length must be an integer.')
             .optional(),
-
         ];
 
 

@@ -3,17 +3,16 @@ exports.validate = (method) => {
 switch (method) {
     case 'add': {
         return [
-            body('product_id','USR_02,The product_id is required.')
+            body('product_id','CAR_02,The product_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The product_id is integer value.'),
-            body('cart_id','USR_02,The cart_id is required.')
+            .isInt().withMessage('CAR_02,The product_id is integer value.'),
+            body('cart_id','CAR_01,The cart_id is required.')
             .trim()
             .not()
-            .isEmpty()
-            .isInt().withMessage('USR_02,The product_id is integer value.'),
-            body('attributes','USR_02,The attribute is required.')
+            .isEmpty(),
+            body('attributes','CAR_01,The attribute is required.')
             .trim()
             .not()
             .isEmpty()
@@ -22,11 +21,10 @@ switch (method) {
     }
     case 'getcartId':{
         return [
-            param('cart_id','USR_02,The cart_id is required.')
+            param('cart_id','CAR_01,The cart_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The cart_id is integer value.'),
 
         ]
 
@@ -35,11 +33,10 @@ switch (method) {
     case 'removeProduct':{
         return [
 
-            param('item_id','USR_02,The item_id is required.')
+            param('item_id','CAR_03,The item_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The item_id is integer value.'),
 
         ]
     }
@@ -48,12 +45,10 @@ switch (method) {
 
         return [
 
-            param('cart_id','USR_02,The item_id is required.')
+            param('cart_id','CAR_02,The cart_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The item_id is integer value.'),
-
         ]
     }
 
@@ -61,29 +56,25 @@ switch (method) {
 
         return [
 
-            body('item_id','USR_02,The product_id is required.')
+            param('item_id','CAR_05,The item_id is required.')
+            .trim()
+            .not()
+            .isEmpty(),
+            body('quantity','CAR_04,The quantity is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The product_id is integer value.'),
-            body('quantity','USR_02,The cart_id is required.')
-            .trim()
-            .not()
-            .isEmpty()
-            .isInt().withMessage('USR_02,The product_id is integer value.'),
-           
-
+            .isInt().withMessage('CAR_04,The quantity should be an integer value.'),
         ]
     }
 
     case 'totalAmount':{
 
         return [
-            param('cart_id','USR_02,The cart_id is required.')
+            param('cart_id','CAR_01,The cart_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The cart_id is integer value.'),
         ]
     }
 

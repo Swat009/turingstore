@@ -6,11 +6,11 @@ switch (method) {
     case 'getTax':{
         return [
 
-            param('item_id','USR_02,The item_id is required.')
+            param('tax_id','TAX_01,The tax_id is required.')
             .trim()
             .not()
             .isEmpty()
-            .isInt().withMessage('USR_02,The item_id is integer value.'),
+            .isInt().withMessage('TAX_01,The tax_id must be an integer value.'),
 
         ]
     }
