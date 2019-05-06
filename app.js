@@ -47,20 +47,6 @@ Shipping.belongsTo(ShippingRegion);
 ShippingRegion.hasMany(Shipping);
 Order.belongsTo(Customers);
 Customers.hasMany(Order);
-//Order.belongsTo(Shipping);
-//Shipping.hasMany(Order);
-//Order.belongsTo(Tax);
-//Tax.hasMany(Order);
-
-//Cart.hasMany(Order);
-
-//Order.belongsToMany(Product, {through: OrderDetail});
-//Product.belongsToMany(Order, {through: OrderDetail});
-//OrderDetail.hasOne(Cart);
-
-
-
-
 
 
 //Routes of all Controllers
@@ -107,8 +93,7 @@ app.use(errorController.handleError);
 
 sequelize.sync()
 .then( result => {
-   // throw new Error('Doh!');
-    console.log(result);
+   
     app.listen(process.env.PORT || 8000);  
 })
 .catch(err => {

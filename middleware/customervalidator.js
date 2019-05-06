@@ -34,11 +34,10 @@ switch (method) {
                             return Promise.reject('USR_04,The email already exists.')
                         }
                     })
-                })
-                .normalizeEmail(),
-            body('password')
+                }),
+            body('password','USR_11,The password is required.')
                 .trim()
-                .isLength({min: 5}).withMessage('USR_10', 'The password should be atleast of length 5.'),
+                .isLength({min: 5}).withMessage('USR_10, The password should be atleast of length 5.'),
             body('name','USR_02,The name is required.')
                 .trim()
                 .not()
@@ -84,6 +83,8 @@ switch (method) {
             .trim()
             .not()
             .isEmpty()
+            .isInt().withMessage('credit card number must only contain digits.')
+            .isLength({min: 16,max:16}).withMessage('USR_13, The credit card number should have 16 digits.'),
         
         ];
     }
