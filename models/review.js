@@ -1,5 +1,5 @@
+var DataTypes = require('sequelize/lib/data-types');
 const Sequelize = require('sequelize'); 
-
 const sequelize = require('../util/database');
 
 const Review = sequelize.define('review',{
@@ -17,6 +17,10 @@ const Review = sequelize.define('review',{
         allowNull: false,
 
     },
+    created_on:{
+        type:DataTypes.DATE,
+        allowNull:false
+    }
    
 
 
