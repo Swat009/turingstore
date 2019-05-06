@@ -13,34 +13,44 @@ const Order = sequelize.define('order',{
     total_amount: {
 
         type: DataTypes.DECIMAL(10,2),
-        defaultValue: 0,
+        defaultValue: 1000000,
+       
         
     },
-    comments:{
+    shipping_id:{
 
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    tax_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false
 
+    },
+    shipped_on:{
+        
+        type:DataTypes.DATE,
+       
+    },
+    created_on:{
+        
+        type:DataTypes.DATE,
+        allowNull: false,
+       
     },
     auth_code:{
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
 
     },
     status: {
 
         type: Sequelize.INTEGER,
+        defaultValue: 0,
 
-    },
-    tax_id:{
-
-        type: Sequelize.INTEGER,
-        allowNull: false,
     },
     comments:{
-
-        type: Sequelize.STRING,
-
-
+        type: Sequelize.STRING(255),
     }
 
 },{timestamps: false});

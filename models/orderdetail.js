@@ -1,22 +1,20 @@
 const Sequelize = require('sequelize'); 
 var DataTypes = require('sequelize/lib/data-types');
 const sequelize = require('../util/database');
-
 const OrderDetail = sequelize.define('orderdetail',{
 
    
-
     item_id: {
 
         type: Sequelize.STRING,
         allowNull: false,
 
     },
-    atttributes:{
+    attributes:{
        
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         allowNull: false,
-        defaultValue: 'yo',
+       
 
     },
     product_name:{
@@ -31,7 +29,7 @@ const OrderDetail = sequelize.define('orderdetail',{
     },
     unit_cost:{
 
-        type: Sequelize.INTEGER,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
 
     }

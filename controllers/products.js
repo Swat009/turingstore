@@ -145,10 +145,10 @@ exports.addReview = (req, res, next) => {
     .then(product =>{
 
         return product.createReview({
-            name: "Test User",
+          
             review: review,
             rating: rating,
-            created_on: n
+            created_on: sequelize.fn('NOW')
         })
        
     

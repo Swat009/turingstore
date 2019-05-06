@@ -14,7 +14,7 @@ const CartItem = sequelize.define('cartitem',{
   
     attributes : {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         allowNull: false,
 
     },
@@ -24,6 +24,10 @@ const CartItem = sequelize.define('cartitem',{
         allowNull: false,
 
     },
+    added_on:{
+        type:DataTypes.DATE,
+        allowNull:false
+    }
    
 
 

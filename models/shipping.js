@@ -13,7 +13,7 @@ const Shipping = sequelize.define('shipping',{
     },
     shipping_type: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
 
     },

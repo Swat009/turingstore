@@ -1,6 +1,7 @@
 var uniqid = require('uniqid');
 const Cart = require('../models/cart'); 
 const Product = require('../models/product');
+const sequelize = require('../util/database');
 
 
 genereteResult = (products)=>{
@@ -78,7 +79,8 @@ exports.add = (req, res, next) => {
         return fetchedCart.addProduct(product, {through: { 
             quantity: newQuantity,
             item_id: item_id,
-            attributes: attributes
+            attributes: attributes,
+            added_on: sequelize.fn('NOW')
 
         }});
     })

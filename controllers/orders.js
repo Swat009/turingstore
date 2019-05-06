@@ -2,8 +2,11 @@ const { validationResult } = require('express-validator/check');
 const { body } = require('express-validator/check');
 const Cart = require('../models/cart'); 
 const Order = require('../models/orders');
+const Tax = require('../models/tax');
 const Customer = require('../models/customer');
 const validationHandler = require('../util/validator');
+const Shipping = require('../models/shipping');
+const sequelize = require('../util/database');
 
 
 exports.createOrder = (req, res, next) => {
@@ -17,9 +20,31 @@ exports.createOrder = (req, res, next) => {
     const customer_id = req.body.customer_id;
     const shipping_id = req.body.shipping_id;
     const tax_id = req.body.tax_id;
-    
 
-    Cart.findByPk(cart_id)
+    let currentOrder;
+    let totalAmount = 0.0;
+    let taxPercentage = 0.0;
+    let shippingCost = 0.0;
+
+    Tax.findByPk(tax_id)
+    .then(tax=>{
+
+        taxPercentage = tax.tax_percentage;
+
+    })
+    .then(()=>{
+
+        return Shipping.findByPk(shipping_id);
+    })
+    .then(shipping =>{
+
+        shippingCost = shipping.shipping_cost;
+    })
+    .then(()=>{
+
+        return Cart.findByPk(cart_id);
+
+    })
     .then(cart =>{
         fetchedCart = cart;
         return cart.getProducts();
@@ -30,12 +55,15 @@ exports.createOrder = (req, res, next) => {
         .then(customer =>{
 
             return customer.createOrder({
-                cart_id:cart_id,
-                shipping_id:shipping_id,
-                tax_id:tax_id
+                cart_id: cart_id,
+                shipping_id: shipping_id,
+                tax_id: tax_id,
+                created_on: sequelize.fn('NOW')
             });
         } )
         .then(order =>{
+
+            currentOrder = order;
 
             return order.addProduct(products.map(product =>{
 
@@ -44,14 +72,18 @@ exports.createOrder = (req, res, next) => {
                     product_name: product.name,
                     unit_cost: product.price,
                     item_id:product.cartitem.item_id,
-                    attributes:product.attributes,
+                    attributes:product.cartitem.attributes,
+
                 };
+                totalAmount += (parseFloat(product.price)*parseInt(product.cartitem.quantity));
                 return product;
 
             }));
 
         })
         .catch(err => {
+
+           console.log(err);
 
             if(!err.statusCode){
                 err.statusCode = 500;
@@ -61,11 +93,22 @@ exports.createOrder = (req, res, next) => {
 
 
     })
-    .then(order=>{
+    .then(()=>{
 
         console.log('order is');
-        console.log(order)
-        return res.json({orderId:order[0].orderOrderId});
+        //console.log(order)
+        taxAmount = (parseFloat(totalAmount)*parseFloat(taxPercentage))/100.0;
+        finalCost = parseFloat(totalAmount)+parseFloat(shippingCost)+parseFloat(taxAmount)
+        console.log(taxAmount);
+        console.log(totalAmount);
+        console.log(finalCost);
+        currentOrder.total_amount = finalCost;
+        return currentOrder.save();
+       
+
+    })
+    .then(order=>{
+        return res.json({orderId:order.order_id});
 
     })
     .catch(err => {
@@ -75,7 +118,7 @@ exports.createOrder = (req, res, next) => {
         }
         next(err);
     });
-   
+
 };
 
 exports.getOrder = (req, res, next) => {
@@ -163,25 +206,14 @@ exports.getShortDetail = (req, res, next) => {
     Order.findByPk(order_id)
     .then(order =>{
 
-        currentorder=order;
-        return order.getProducts();
-    })
-    .then(products=>{
-        cart_data = [];
-        totalAmount = 0.0;
-        products.forEach(function (product) {
-
-            totalAmount += (parseFloat(product.price)*parseInt(product.orderdetail.quantity));
-        
-        });
-
-        order_data = {
-            order_id:currentorder.order_id,
-            total_amount:totalAmount
+        orderdetail = {
+            order_id: order.order_id,
+            total_amount:order.total_amount,
+            created_on: order.created_on,
+            status: order.status === 0 ?"unpaid":"paid"
         }
 
-        return res.status(200).json(order_data);
-
+        res.status(200).json(orderdetail);
     })
     .catch(err => {
 

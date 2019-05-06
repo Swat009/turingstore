@@ -5,15 +5,9 @@ const sequelize = require('../util/database');
 const Review = sequelize.define('review',{
 
    
-    name: {
-
-        type: Sequelize.STRING,
-        allowNull: false,
-
-    },
     review: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
 
     },
@@ -23,10 +17,7 @@ const Review = sequelize.define('review',{
         allowNull: false,
 
     },
-    created_on: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    }
+   
 
 
 

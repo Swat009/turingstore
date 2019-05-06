@@ -5,15 +5,10 @@ const expressValidator = require('express-validator');
 const helmet = require('helmet');
 const morgan = require('morgan');
 var winston = require('./util/winston');
-const fs = require('fs');
 const passport = require('./util/passport');
 const errorController = require('./controllers/error');
 
-/* const accessLogStream = fs.createWriteStream(
-    path.join(__dirname,'access.log'),
-    {flags:'a'}
-);
- */
+
 
 //Models used in Project
 const Customers = require('./models/customer'); 
@@ -32,6 +27,7 @@ const ShippingRegion = require('./models/shippingregion');
 const ProductCart = require('./models/productcart');
 const Order = require('./models/orders');
 const OrderDetail = require('./models/orderdetail');
+const Tax = require('./models/tax');
  //Associations between the models
 Review.belongsTo(Product,{constraints: true, onDelete: 'CASCADE'});
 Product.hasMany(Review);
@@ -51,8 +47,10 @@ Shipping.belongsTo(ShippingRegion);
 ShippingRegion.hasMany(Shipping);
 Order.belongsTo(Customers);
 Customers.hasMany(Order);
-Order.belongsTo(Shipping);
-Shipping.hasMany(Order);
+//Order.belongsTo(Shipping);
+//Shipping.hasMany(Order);
+//Order.belongsTo(Tax);
+//Tax.hasMany(Order);
 
 //Cart.hasMany(Order);
 

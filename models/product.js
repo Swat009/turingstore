@@ -13,13 +13,13 @@ const Product = sequelize.define('product',{
     },
     name: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
 
     },
     description: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         allowNull: false,
 
     },
@@ -36,15 +36,15 @@ const Product = sequelize.define('product',{
 
     },
     thumbnail: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: false,
     },
     image: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
        
     },
     image_2: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
        
     },
     display:{

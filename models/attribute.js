@@ -12,7 +12,7 @@ const Attribute = sequelize.define('attribute',{
     },
     name: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(32),
         allowNull: false,
 
     }

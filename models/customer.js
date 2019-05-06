@@ -13,95 +13,92 @@ const Customer = sequelize.define('customer',{
 
     name: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
 
     },
     email: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
         unique: true
 
     },
     password: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
 
 
     },
     address_1: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
         
 
     },
     address_2: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
 
     },
     city: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
 
     },
     region: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
         
 
     },
     postal_code: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
 
     },
     country: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
 
     },
     shipping_region_id: {
 
-        type: Sequelize.STRING,
-        defaultValue: ""
+        type: Sequelize.INTEGER,
+        defaultValue: -1
        
 
     },
     day_phone: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
     },
     eve_phone: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
         
 
     },
     mob_phone: {
 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         defaultValue: ""
        
     },
     facebookProviderId: {
-        type: Sequelize.STRING,
-    },
-    facebookProviderToken: {
         type: Sequelize.STRING,
     },
     credit_card: {
