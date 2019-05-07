@@ -42,7 +42,7 @@ exports.category = (req, res, next) => {
         return res.status(400).json(validation_result[1]);
     }
     const category_id = req.params.category_id;
-    Category.findOne({category_id: category_id, raw: true})
+    Category.findOne({where:{category_id: category_id}})
     .then(category => {    
         return res.status(200).json(category)
     })
