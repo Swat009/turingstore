@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/orders/shortDetail/:order_id',ordersValidator.validate('getShortDetail'),ordersController.getShortDetail);
 router.get('/orders/inCustomer',isAuth,ordersController.getCustomer);
 router.get('/orders/:order_id',ordersValidator.validate('getOrder'),ordersController.getOrder);
-router.post('/orders',ordersValidator.validate('createOrder'),ordersController.createOrder);
+router.post('/orders',isAuth,ordersValidator.validate('createOrder'),ordersController.createOrder);
 
 
 

@@ -10,14 +10,13 @@ const sequelize = require('../util/database');
 
 
 exports.createOrder = (req, res, next) => {
-    
     validation_result = validationHandler(req,res);
     if(validation_result[0]=="error")
     {
         return res.status(400).json(validation_result[1]);
     }
     const cart_id = req.body.cart_id;
-    const customer_id = req.body.customer_id;
+    const customer_id = req.userId;
     const shipping_id = req.body.shipping_id;
     const tax_id = req.body.tax_id;
 
@@ -29,6 +28,12 @@ exports.createOrder = (req, res, next) => {
     Tax.findByPk(tax_id)
     .then(tax=>{
 
+        if(!tax)
+        {
+            res.status(500).json({error:'Tax not found'});
+            throw new Error('Tax not found');
+        }
+
         taxPercentage = tax.tax_percentage;
 
     })
@@ -38,6 +43,12 @@ exports.createOrder = (req, res, next) => {
     })
     .then(shipping =>{
 
+        if(!shipping)
+        {
+            res.status(500).json({error:'Shipping id not found'});
+            throw new Error('Shipping not found');
+        }
+
         shippingCost = shipping.shipping_cost;
     })
     .then(()=>{
@@ -46,11 +57,17 @@ exports.createOrder = (req, res, next) => {
 
     })
     .then(cart =>{
+        if(!cart)
+        {
+            res.status(500).json({error:'Cart not found'});
+            throw new Error('Cart not found');
+        }
         fetchedCart = cart;
         return cart.getProducts();
     })
     .then(products =>{
-
+        console.log('Customer Id');
+        console.log(customer_id);
         return Customer.findByPk(customer_id)
         .then(customer =>{
 
@@ -83,8 +100,6 @@ exports.createOrder = (req, res, next) => {
         })
         .catch(err => {
 
-           console.log(err);
-
             if(!err.statusCode){
                 err.statusCode = 500;
             }
@@ -93,26 +108,16 @@ exports.createOrder = (req, res, next) => {
 
 
     })
-    .then(()=>{
-
-        console.log('order is');
-        //console.log(order)
+    .then(()=>{   
         taxAmount = (parseFloat(totalAmount)*parseFloat(taxPercentage))/100.0;
-        finalCost = parseFloat(totalAmount)+parseFloat(shippingCost)+parseFloat(taxAmount)
-        console.log(taxAmount);
-        console.log(totalAmount);
-        console.log(finalCost);
+        finalCost = parseFloat(totalAmount)+parseFloat(shippingCost)+parseFloat(taxAmount);
         currentOrder.total_amount = finalCost;
         return currentOrder.save();
-       
-
     })
     .then(order=>{
         return res.json({orderId:order.order_id});
-
     })
     .catch(err => {
-
         if(!err.statusCode){
             err.statusCode = 500;
         }

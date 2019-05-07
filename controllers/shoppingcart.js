@@ -321,16 +321,11 @@ exports.totalAmount = (req,res,next) =>{
         products.forEach(function (product) {
             totalAmount += (parseFloat(product.price)*parseInt(product.cartitem.quantity));
         });
-
-        console.log('TotalAmount'+totalAmount);
-        
         return res.status(200).json({"total_amount":totalAmount});
        
 
     })
     .catch(err => {
-
-       
         next(err);
     });
 

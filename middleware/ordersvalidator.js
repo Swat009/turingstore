@@ -19,12 +19,6 @@ exports.validate = (method) => {
                 .not()
                 .isEmpty()
                 .isInt().withMessage('tax_id must be an integer.'),
-                body('customer_id','USR_02,The customer_id is required.')
-                .trim()
-                .not()
-                .isEmpty()
-                .isInt().withMessage('customer must be an integer.'),
-                
                
             ]
         }

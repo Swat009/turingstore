@@ -70,7 +70,9 @@ exports.getProduct = (req, res, next) => {
 
         if(!product)
         {
-            return res.status(200).json({error:'Product not found'});
+            res.status(200).json({error:'Product not found'});
+            throw new Error('Product not found');
+
         }
 
         res.status(200).json(product);
@@ -99,7 +101,9 @@ exports.getReview = (req, res, next) => {
 
         if(!product)
         {
-            return res.status(200).json({error:"No product found"});
+            res.status(200).json({error:"No product found"});
+            throw new Error('Product not found');
+
 
         }
 
@@ -133,7 +137,8 @@ exports.addReview = (req, res, next) => {
 
         if(!product)
         {
-            return res.status(200).json({error:"No product found"});
+            res.status(200).json({error:"No product found"});
+            throw new Error('Product not found');
 
         }
 
