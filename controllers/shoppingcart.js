@@ -160,14 +160,14 @@ exports.update = (req, res, next) => {
     let fetchedCart;
     if(isNaN(product_id))
     {
-        return res.status(200).json({error:'Product id invalid'});
+        return res.status(200).json({error:'Item id invalid'});
     }
 
     Cart.findByPk(cart_id)
     .then(cart =>{
         if(!cart)
         {
-            res.status(200).json({error:'Cart not found'});
+            res.status(200).json({error:'Item id invalid'});
             throw new Error('Cart not found');
         }
 

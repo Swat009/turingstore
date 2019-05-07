@@ -7,9 +7,6 @@ const morgan = require('morgan');
 var winston = require('./util/winston');
 const passport = require('./util/passport');
 const errorController = require('./controllers/error');
-
-
-
 //Models used in Project
 const Customers = require('./models/customer'); 
 const Product = require('./models/product');
@@ -47,8 +44,6 @@ Shipping.belongsTo(ShippingRegion);
 ShippingRegion.hasMany(Shipping);
 Order.belongsTo(Customers);
 Customers.hasMany(Order);
-
-
 //Routes of all Controllers
 const sequelize = require('./util/database');
 const categoriesRoutes = require('./routes/categories');
@@ -61,7 +56,6 @@ const attributeRoutes = require('./routes/attributes');
 const shoppingcartRoutes = require('./routes/shoppingcart');
 const taxRoutes = require('./routes/tax');
 const shippingRoutes = require('./routes/shipping');
-
 //App intialization
 const app = express();
 app.use(helmet());
@@ -88,9 +82,6 @@ app.use(taxRoutes);
 app.use(shippingRoutes);
 app.use(errorController.get404);
 app.use(errorController.handleError);
-
-
-
 sequelize.sync()
 .then( result => {
    

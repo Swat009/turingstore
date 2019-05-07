@@ -17,9 +17,26 @@ switch (method) {
             body('name','USR_11,The name field should not be empty.')
                 .trim()
                 .not()
+                .isEmpty(),
+            body('password')
+                .trim()
+                .isLength({min: 5}).withMessage('USR_10, The password should be atleast of length 5.')
+                .optional(),
+            body('day_phone','USR_11,The day_phone should not be empty.')
+                .trim()
+                .not()
                 .isEmpty()
-        
-        
+                .optional(),
+            body('eve_phone','USR_11,The eve_phone field should not be empty.')
+                .trim()
+                .not()
+                .isEmpty()
+                .optional(),
+            body('mob_phone','USR_11,The mob_phone should not be empty.')
+                .trim()
+                .not()
+                .isEmpty()
+                .optional(),
         ];
     }
 

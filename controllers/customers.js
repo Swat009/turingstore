@@ -19,28 +19,42 @@ exports.updateCustomer = (req, res, next) => {
     const day_phone = req.body.day_phone || '';
     const eve_phone = req.body.eve_phone || '';
     const mob_phone = req.body.mob_phone || '';
+    const password =  req.body.password || '';
+    let hashedPassword;
 
-    Customer.findOne({
-        where: {email: email}
+    bcrypt.hash(password, 12)
+    .then(hashedPw => {
+        hashedPassword = hashedPw;
     })
+    .then(()=>{
+
+        return Customer.findOne({
+            where: {email: email}
+        })
+
+    }) 
     .then(customer =>{
-
-        
+        if(!customer)
+        {
+            res.status(200).json({error:'Email id invalid.'});
+            throw new Error('Email not found');
+        }
         customer.name = name;
-
         if(day_phone!== "")
         {
             customer.day_phone = day_phone;
         }
-
         if(eve_phone!== "")
         {
             customer.eve_phone = eve_phone;
         }
-
         if(mob_phone!== "")
         {
             customer.mob_phone = mob_phone;
+        }
+        if(password!=="")
+        {
+            customer.password = hashedPassword;
         }
         return customer.save();
 
