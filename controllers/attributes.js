@@ -74,6 +74,11 @@ exports.getAttributeValues = (req, res, next) => {
 
     Attribute.findByPk(attribute_id) 
     .then(attribute =>{
+        if(!attribute)
+        {
+            res.status(500).json({error:' not found'});
+            throw new Error('attribute not found');
+        }
 
         
         attribute.getAttributevalues({ attributes: {
@@ -108,6 +113,12 @@ exports.getProductAttributes = (req, res, next) => {
 
     Product.findByPk(product_id)
     .then( product =>{
+
+        if(!product)
+        {
+            res.status(500).json({error:'product not found'});
+            throw new Error('product not found');
+        }
 
 
         return product.getAttributevalues({

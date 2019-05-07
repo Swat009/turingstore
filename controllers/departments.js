@@ -40,6 +40,12 @@ exports.department = (req, res, next) => {
 
     Departments.findOne({department_id: department_id, raw: true})
     .then(department => {
+
+        if(!department)
+        {
+            res.status(500).json({error:' not found'});
+            throw new Error('not found');
+        }
         
         return res.status(200).json(department)
 

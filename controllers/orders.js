@@ -136,6 +136,12 @@ exports.getOrder = (req, res, next) => {
     Order.findByPk(order_id)
     .then(order =>{
 
+        if(!order)
+        {
+            res.status(500).json({error:'order not found'});
+            throw new Error('order not found');
+        }
+
         return order.getProducts();
     })
     .then(products=>{
@@ -179,6 +185,12 @@ exports.getCustomer = (req, res, next) => {
     Customer.findByPk(customer_id)
     .then(customer =>{
 
+        if(!customer)
+        {
+            res.status(500).json({error:'Customer not found'});
+            throw new Error('Customer not found');
+        }
+
         return customer.getOrders();
     })
     .then(orders =>{
@@ -210,6 +222,12 @@ exports.getShortDetail = (req, res, next) => {
     let currentorder;
     Order.findByPk(order_id)
     .then(order =>{
+
+        if(!order)
+        {
+            res.status(500).json({error:'order not found'});
+            throw new Error('order not found');
+        }
 
         orderdetail = {
             order_id: order.order_id,

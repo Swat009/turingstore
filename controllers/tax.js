@@ -31,6 +31,12 @@ exports.getTax = (req, res, next) => {
     Tax.findByPk(tax_id)
     .then(tax =>{
 
+        if(!tax)
+        {
+            res.status(500).json({error:'tax not found'});
+            throw new Error('tax not found');
+        }
+
         return res.status(200).json(tax);
     })
     .catch(err => {
