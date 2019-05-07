@@ -13,9 +13,15 @@ switch (method) {
             .isInt().withMessage('PRO_02,Page must be an integer.')
             .optional(),
             query('order','PRO_04,Ordering can either be by category_id or name.')
-            .isIn('category_id','name')
+            .custom( (value,{ req }) => {
+                    console.log(value);
+                    if (value!=='name' && value!=='category_id'){
+                        return Promise.reject('PRO_12, Order can only be name or category_id.')
+                    }
+                    return true;
+                }
+            )
             .optional(),
-
         ]
     }
  
