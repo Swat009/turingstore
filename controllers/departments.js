@@ -6,7 +6,7 @@ const validationHandler = require('../util/validator');
 exports.departments = (req, res, next) => {
 
 
-    Departments.findAll({raw: true})
+    Departments.findAll()
     .then( departments =>{
 
         console.log(departments);
@@ -38,7 +38,7 @@ exports.department = (req, res, next) => {
     const department_id = req.params.department_id;
 
 
-    Departments.findOne({where:{department_id: department_id, raw: true}})
+    Departments.findByPk(department_id)
     .then(department => {
 
         if(!department)
