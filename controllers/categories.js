@@ -44,6 +44,11 @@ exports.category = (req, res, next) => {
     const category_id = req.params.category_id;
     Category.findByPk(category_id)
     .then(category => {    
+        if(!category)
+        {
+            res.status(500).json({error:'category not found'});
+            throw new Error('not found');
+        }
         return res.status(200).json(category)
     })
     .catch(err => {
@@ -65,6 +70,11 @@ exports.getProductCategories = (req, res, next) => {
     const product_id = req.params.product_id;
     Product.findByPk(product_id) 
     .then( product =>{
+        if(!product)
+        {
+            res.status(500).json({error:'product not found'});
+            throw new Error('not found');
+        }
         product.getCategories()
         .then(categories =>{
             categories_list = [];
@@ -96,6 +106,11 @@ exports.getDepartmentCategories = (req, res, next) => {
     const department_id = req.params.department_id;
     Department.findByPk(department_id) 
     .then( department =>{
+        if(!department)
+        {
+            res.status(500).json({error:'department not found'});
+            throw new Error('not found');
+        }
         department.getCategories()
         .then(categories =>{
            return res.status(200).json(categories);
