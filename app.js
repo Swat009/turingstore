@@ -91,7 +91,7 @@ app.use(errorController.handleError);
 
 
 
-sequelize.sync()
+sequelize.sync({force:true})
 .then( result => {
    
     app.listen(process.env.PORT || 8000);  
