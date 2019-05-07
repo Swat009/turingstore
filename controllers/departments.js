@@ -38,7 +38,7 @@ exports.department = (req, res, next) => {
     const department_id = req.params.department_id;
 
 
-    Departments.findOne({department_id: department_id, raw: true})
+    Departments.findOne({where:{department_id: department_id, raw: true}})
     .then(department => {
 
         if(!department)
