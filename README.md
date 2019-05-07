@@ -1,6 +1,6 @@
 # TuringStore
 
-This project contains a set of Express.js REST APIs which are intented to serve as the backend of an online shopping store.
+This project contains a set of Express.js REST APIs which are intented to serve as the backend of an online shopping store. Sample endpoints are available [here](https://turingstore.herokuapp.com/)
 
 ## Installation
 
