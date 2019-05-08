@@ -43,14 +43,9 @@ exports.getAttribute = (req, res, next) => {
             return res.status(200).json({error:'Attribute not found'});
             
         }
-
-
         res.status(200).json(attribute);
-
-
     })
     .catch(err => {
-
         if(!err.statusCode){
             err.statusCode = 500;
         }
@@ -63,32 +58,25 @@ exports.getAttribute = (req, res, next) => {
 
 
 exports.getAttributeValues = (req, res, next) => {
-
     validation_result = validationHandler(req,res);
     if(validation_result[0]=="error")
     {
         return res.status(400).json(validation_result[1]);
     }
-
     const attribute_id = req.params.attribute_id;
-
     Attribute.findByPk(attribute_id) 
     .then(attribute =>{
         if(!attribute)
         {
             res.status(500).json({error:' not found'});
             throw new Error('attribute not found');
-        }
-
-        
+        }   
         attribute.getAttributevalues({ attributes: {
             exclude: ['attributeAttributeId']
           }})
         .then(attributevalues =>{
             return res.status(200).json(attributevalues);
         })
-        
-
     })
     .catch(err => {
         if(!err.statusCode){
@@ -96,9 +84,6 @@ exports.getAttributeValues = (req, res, next) => {
         }
         next(err);
     });
-
-    
-
 };
 
 exports.getProductAttributes = (req, res, next) => {
@@ -108,19 +93,14 @@ exports.getProductAttributes = (req, res, next) => {
     {
         return res.status(400).json(validation_result[1]);
     }
-
     const product_id = req.params.product_id;
-
     Product.findByPk(product_id)
     .then( product =>{
-
         if(!product)
         {
             res.status(500).json({error:'product not found'});
             throw new Error('product not found');
         }
-
-
         return product.getAttributevalues({
             attributes: {  include:['attribute_value_id','value'],
             exclude:['productattribute.productProductId']},
@@ -130,13 +110,9 @@ exports.getProductAttributes = (req, res, next) => {
                         },
                     ]         
         })
-   
-
     })
     .then(attributes =>{
-
         attributes_list = [];
-
         attributes.forEach(function (attribute) {
 
             const attribute_data = {
@@ -145,12 +121,8 @@ exports.getProductAttributes = (req, res, next) => {
                 attribute_value: attribute.value
             }
             attributes_list.push(attribute_data)
-
         });
-
-
         res.status(200).json(attributes_list);
-
     })        
     .catch(err => {
 
@@ -158,7 +130,6 @@ exports.getProductAttributes = (req, res, next) => {
             err.statusCode = 500;
         }
         next(err);
-
     });
     
 };

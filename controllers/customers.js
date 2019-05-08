@@ -5,23 +5,18 @@ const validationHandler = require('../util/validator');
 
 
 exports.updateCustomer = (req, res, next) => {
-
     validation_result = validationHandler(req,res);
-
     if(validation_result[0]=="error")
     {
         return res.status(400).json(validation_result[1]);
     }
-
     const email = req.body.email;
     const name = req.body.name;
-
     const day_phone = req.body.day_phone || '';
     const eve_phone = req.body.eve_phone || '';
     const mob_phone = req.body.mob_phone || '';
     const password =  req.body.password || '';
     let hashedPassword;
-
     bcrypt.hash(password, 12)
     .then(hashedPw => {
         hashedPassword = hashedPw;
@@ -97,21 +92,14 @@ exports.updateCustomer = (req, res, next) => {
 };
 
 exports.register = (req, res, next) =>{
-
-   
-
     validation_result = validationHandler(req,res);
-
     if(validation_result[0]=="error")
     {
         return res.status(400).json(validation_result[1]);
     }
-
-    //const email = req.body.email;
     const email = req.body.email;
     const name = req.body.name;
     const password = req.body.password;
-    
     bcrypt
         .hash(password, 12)
         .then(hashedPw => {
@@ -217,16 +205,11 @@ exports.loginCustomer = (req, res, next) => {
                 process.env.JWTSECRETKEY,
                 {expiresIn: '24h'}
             );
-
-
             credit_card = "";
             if(loadedCustomer.credit_card && loadedCustomer.credit_card.length>4)
             {
                 credit_card = "XXXXXXXX"+loadedCustomer.credit_card.slice(-4);
             }
-
-
-
             customer_data = {
 
                 'customer_id': loadedCustomer.customer_id,
@@ -245,10 +228,7 @@ exports.loginCustomer = (req, res, next) => {
                 "credit_card": credit_card
 
             }
-
             return res.status(200).json({customer: customer_data,token:token,expires_in: '24h'});
-            
-
         })
         .catch(err => {
 
@@ -263,15 +243,11 @@ exports.loginCustomer = (req, res, next) => {
 };
 
 exports.loginFbCustomer = (req, res, next) => {
-
         validation_result = validationHandler(req,res);
-
         if(validation_result[0]=="error")
         {
             return res.status(400).json(validation_result[1]);
         }
-
-    
         console.log('user details');
         console.log(req.user);
         loadedCustomer = req.user
@@ -284,16 +260,11 @@ exports.loginFbCustomer = (req, res, next) => {
         process.env.JWTSECRETKEY,
         {expiresIn: '24h'}
         );
-
-
         credit_card = "";
         if(loadedCustomer.credit_card && loadedCustomer.credit_card.length>4)
         {
             credit_card = "XXXXXXXX"+loadedCustomer.credit_card.slice(-4);
         }
-
-
-
         customer_data = {
 
             'customer_id': loadedCustomer.customer_id,
@@ -314,15 +285,10 @@ exports.loginFbCustomer = (req, res, next) => {
         }
 
         return res.status(200).json({customer: customer_data,token:token,expires_in: '24h'});
-       
-
-
 };
 
 exports.getCustomer = (req, res, next) => {
-
     customer_id =  req.userId;
-
     Customer.findByPk(customer_id)
     .then(customer =>{
 
@@ -358,13 +324,9 @@ exports.getCustomer = (req, res, next) => {
 
     });
 
-
-
-
 };
 
 exports.putAddress = (req, res, next ) =>{
-
     customer_id =  req.userId;
     address_1 = req.body.address_1;
     address_2 = req.body.address_2 || '';
@@ -500,8 +462,6 @@ exports.putAddress = (req, res, next ) =>{
         }
         next(err);
     });
-
-
 }
 
 exports.putcreditCard = (req, res, next ) =>{
@@ -562,8 +522,6 @@ exports.putcreditCard = (req, res, next ) =>{
         }
         next(err);
     });
-
-
 }
 
 
