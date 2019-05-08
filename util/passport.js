@@ -2,6 +2,7 @@
 const Customers = require('../models/customer'); 
 const passport = require('passport');
 var FacebookTokenStrategy = require('passport-facebook-token');
+var crypto = require("crypto");
 
 const Customer = require('../models/customer'); 
 
@@ -21,7 +22,7 @@ passport.use(new FacebookTokenStrategy({
   function (accessToken, refreshToken, profile, done) {
     //Using next tick to take advantage of async properties
     process.nextTick(function () {
-        Customers.findOne( { where : { facebookProviderId : profile.id } }).then(function (user, err) {
+        Customers.findOne( { where : { email: profile.emails[0].value } }).then(function (user, err) {
             if(err) {
                 return done(err);
             } 
@@ -34,7 +35,8 @@ passport.use(new FacebookTokenStrategy({
 
                   name: profile.displayName,
                   email: profile.emails[0].value,
-                  facebookProviderId: profile.id
+                  facebookProviderId: profile.id,
+                  password: crypto.randomBytes(20).toString('hex')
   
                 });
 
@@ -42,7 +44,7 @@ passport.use(new FacebookTokenStrategy({
                 .then(result =>{
 
                     //Find the user (therefore checking if it was indeed created) and return it
-                    Customers.findOne( { where : { facebookProviderId : profile.id  } })
+                    Customers.findOne( { where : { email: profile.emails[0].value } })
                     .then(function (user, err) {
                     if(user) {
                         return done(null, user);
@@ -56,13 +58,7 @@ passport.use(new FacebookTokenStrategy({
                 
                 });
 
-
-
             });
-
-
-
-                
             }
         });
     });
