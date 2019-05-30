@@ -344,6 +344,7 @@ exports.searchProduct = (req, res, next) => {
         where: {
             
             name: { [Sequelize.Op.like]:'%'+query_string+'%' },
+            description: { [Sequelize.Op.like]:'%'+query_string+'%' },
         
         
         },

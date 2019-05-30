@@ -23,8 +23,8 @@ module.exports = (req, res, next) => {
         decodedToken = jwt.verify(token, process.env.JWTSECRETKEY);
 
     }catch (err){
-        err.statusCode = 500;
-        throw err;
+        //err.statusCode = 500;
+        //throw err;
     }
     if (!decodedToken){
 
