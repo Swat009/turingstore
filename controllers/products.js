@@ -36,11 +36,7 @@ exports.getProducts = (req, res, next) => {
         ]
      })
     .then( products =>{
-
-
-        res.status(200).json(products);
-
-
+        res.status(200).json({count:products.length,rows:products});
     })
     .catch(err => {
 
